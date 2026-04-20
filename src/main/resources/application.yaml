@@ -1,0 +1,21 @@
+spring:
+  docker:
+    compose:
+      enabled: true
+      file: compose.yaml
+  server:
+    port: 8080
+  application:
+    name: demo
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/demo_database
+    username: username
+    password: password
+    driverClassName: org.postgresql.Driver
+  liquibase:
+    enabled: true
+    change-log: classpath:db/liquibase/master.xml
