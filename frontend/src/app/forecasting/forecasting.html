@@ -1,0 +1,32 @@
+<h1 class="page-title">Forecasting / Overview</h1>
+
+<div class="controls">
+  <div class="category-toggles">
+    @for (cat of categories; track cat.key) {
+      <button
+        class="toggle-btn"
+        [class.active]="activeCategory() === cat.key"
+        (click)="selectCategory(cat.key)"
+      >
+        <span class="toggle-icon">⊕</span>
+        {{ cat.label }}
+      </button>
+    }
+  </div>
+
+  <div class="time-toggles">
+    @for (range of timeRanges; track range.key) {
+      <button
+        class="toggle-btn"
+        [class.active]="activeTimeRange() === range.key"
+        (click)="selectTimeRange(range.key)"
+      >
+        {{ range.label }}
+      </button>
+    }
+  </div>
+</div>
+
+<div class="chart-container">
+  <canvas #chartCanvas></canvas>
+</div>

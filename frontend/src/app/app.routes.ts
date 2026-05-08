@@ -10,7 +10,7 @@ export const routes: Routes = [
   {
     path: 'forecasting',
     loadComponent: () =>
-      import('./placeholder/placeholder').then((m) => m.Placeholder),
+      import('./forecasting/forecasting').then((m) => m.Forecasting),
     data: { title: 'Forecasting' },
   },
   {
