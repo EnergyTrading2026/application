@@ -1,6 +1,5 @@
 package xyz.energytrading.timeseries.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,8 +13,11 @@ import java.util.List;
 @RequestMapping("/api/time-series")
 public class TimeSeriesDataController {
 
-    @Autowired
-    private TimeSeriesDataService timeSeriesDataService;
+    private final TimeSeriesDataService timeSeriesDataService;
+
+    public TimeSeriesDataController(TimeSeriesDataService timeSeriesDataService) {
+        this.timeSeriesDataService = timeSeriesDataService;
+    }
 
     @PostMapping
     public ResponseEntity<TimeSeriesDataDTO> createTimeSeriesData(

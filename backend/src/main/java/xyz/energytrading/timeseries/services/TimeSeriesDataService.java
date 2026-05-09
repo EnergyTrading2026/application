@@ -1,6 +1,5 @@
 package xyz.energytrading.timeseries.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import xyz.energytrading.timeseries.dto.TimeSeriesDataDTO;
 import xyz.energytrading.timeseries.mapper.TimeSeriesDataMapper;
@@ -16,13 +15,15 @@ import java.util.Optional;
 @Service
 public class TimeSeriesDataService {
 
-    @Autowired
-    private TimeSeriesDataRepository timeSeriesDataRepository;
+    private final TimeSeriesDataRepository timeSeriesDataRepository;
+    private final TimeSeriesDataMapper timeSeriesDataMapper;
 
-    @Autowired
-    private TimeSeriesDataMapper timeSeriesDataMapper;
-
-    public TimeSeriesDataService() {}
+    public TimeSeriesDataService(
+            TimeSeriesDataRepository timeSeriesDataRepository,
+            TimeSeriesDataMapper timeSeriesDataMapper) {
+        this.timeSeriesDataRepository = timeSeriesDataRepository;
+        this.timeSeriesDataMapper = timeSeriesDataMapper;
+    }
 
     public TimeSeriesDataDTO create(TimeSeriesDataDTO timeSeriesDataDTO) {
         TimeSeriesData entity = timeSeriesDataMapper.toEntity(timeSeriesDataDTO);
