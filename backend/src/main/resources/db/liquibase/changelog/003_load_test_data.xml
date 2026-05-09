@@ -15,11 +15,10 @@
                 relativeToChangelogFile="true"
                 separator=","
                 tableName="time_series_data">
-            <column name="id" type="NUMERIC" index="0"/>
-            <column name="value" type="NUMERIC" index="1"/>
-            <column name="unit" type="STRING" index="2"/>
-            <column name="model_identifier" type="STRING" index="3"/>
-            <column name="timestamp" type="TIMESTAMPTZ" index="4"/>
+            <column name="timestamp" type="TIMESTAMPTZ" index="0"/>
+            <column name="model_identifier" type="STRING" index="1"/>
+            <column name="value" type="NUMERIC" index="2"/>
+            <column name="unit" type="STRING" index="3"/>
         </loadData>
         
         <rollback>

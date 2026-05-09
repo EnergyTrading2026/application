@@ -12,36 +12,30 @@
             </not>
         </preConditions>
         
-        <createSequence sequenceName="time_series_data_id_seq" startValue="1" incrementBy="1"/>
-        
         <createTable tableName="time_series_data">
-            <column name="id" type="BIGINT" defaultValueSequenceNext="time_series_data_id_seq">
-                <constraints nullable="false"/>
-            </column>
             <column name="value" type="DOUBLE PRECISION">
                 <constraints nullable="false"/>
             </column>
             <column name="unit" type="VARCHAR(50)">
                 <constraints nullable="false"/>
             </column>
-            <column name="model_identifier" type="VARCHAR(50)">
+            <column name="timestamp" type="TIMESTAMPTZ">
                 <constraints nullable="false"/>
             </column>
-            <column name="timestamp" type="TIMESTAMPTZ">
+            <column name="model_identifier" type="VARCHAR(50)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
         
         <addPrimaryKey
                 tableName="time_series_data"
-                columnNames="id, timestamp"
+                columnNames="timestamp, model_identifier"
                 constraintName="pk_time_series_data"/>
         
         <sql>SELECT create_hypertable('time_series_data', 'timestamp')</sql>
         
         <rollback>
             <dropTable tableName="time_series_data"/>
-            <dropSequence sequenceName="time_series_data_id_seq"/>
         </rollback>
     </changeSet>
 </databaseChangeLog>

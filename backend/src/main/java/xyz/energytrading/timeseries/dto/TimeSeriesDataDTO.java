@@ -7,7 +7,6 @@ import java.time.OffsetDateTime;
 
 public class TimeSeriesDataDTO {
 
-    private Long id;
     private double value;
     private Unit unit;
     private ModelIdentifier modelIdentifier;
@@ -15,20 +14,11 @@ public class TimeSeriesDataDTO {
 
     public TimeSeriesDataDTO() {}
 
-    public TimeSeriesDataDTO(Long id, double value, Unit unit, ModelIdentifier modelIdentifier, OffsetDateTime timestamp) {
-        this.id = id;
+    public TimeSeriesDataDTO(double value, Unit unit, ModelIdentifier modelIdentifier, OffsetDateTime timestamp) {
         this.value = value;
         this.unit = unit;
         this.modelIdentifier = modelIdentifier;
         this.timestamp = timestamp;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public double getValue() {

@@ -29,9 +29,11 @@ public class TimeSeriesDataController {
         return ResponseEntity.ok(timeSeriesDataService.getAll());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<TimeSeriesDataDTO> getTimeSeriesDataById(@PathVariable Long id) {
-        TimeSeriesDataDTO result = timeSeriesDataService.getById(id);
+    @GetMapping("/{timestamp}/{modelIdentifier}")
+    public ResponseEntity<TimeSeriesDataDTO> getTimeSeriesDataById(
+            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime timestamp,
+            @PathVariable String modelIdentifier) {
+        TimeSeriesDataDTO result = timeSeriesDataService.getById(timestamp, modelIdentifier);
         if (result != null) {
             return ResponseEntity.ok(result);
         }
@@ -45,9 +47,11 @@ public class TimeSeriesDataController {
         return ResponseEntity.ok(timeSeriesDataService.getAllByDateRange(start, end));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTimeSeriesData(@PathVariable Long id) {
-        timeSeriesDataService.deleteById(id);
+    @DeleteMapping("/{timestamp}/{modelIdentifier}")
+    public ResponseEntity<Void> deleteTimeSeriesData(
+            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime timestamp,
+            @PathVariable String modelIdentifier) {
+        timeSeriesDataService.deleteById(timestamp, modelIdentifier);
         return ResponseEntity.noContent().build();
     }
 }

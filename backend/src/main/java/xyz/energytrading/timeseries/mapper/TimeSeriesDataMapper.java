@@ -9,12 +9,12 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface TimeSeriesDataMapper {
-    @Mapping(target = "id.id", source = "id")
     @Mapping(target = "id.timestamp", source = "timestamp")
+    @Mapping(target = "id.modelIdentifier", source = "modelIdentifier")
     TimeSeriesData toEntity(TimeSeriesDataDTO dto);
     
-    @Mapping(target = "id", source = "id.id")
     @Mapping(target = "timestamp", source = "id.timestamp")
+    @Mapping(target = "modelIdentifier", source = "id.modelIdentifier")
     TimeSeriesDataDTO toDto(TimeSeriesData entity);
     
     List<TimeSeriesDataDTO> toDto(List<TimeSeriesData> entities);

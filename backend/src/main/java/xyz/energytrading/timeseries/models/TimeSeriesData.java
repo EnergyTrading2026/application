@@ -8,10 +8,6 @@ import java.time.OffsetDateTime;
 public class TimeSeriesData {
 
     @EmbeddedId
-    @AttributeOverrides({
-        @AttributeOverride(name = "id", column = @Column(name = "id")),
-        @AttributeOverride(name = "timestamp", column = @Column(name = "timestamp"))
-    })
     private TimeSeriesDataId id;
 
     @Column(name = "value", nullable = false)
@@ -21,19 +17,14 @@ public class TimeSeriesData {
     @Column(name = "unit", nullable = false)
     private Unit unit;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "model_identifier", nullable = false)
-    private ModelIdentifier modelIdentifier;
-
     public TimeSeriesData() {
         this.id = new TimeSeriesDataId();
     }
 
     public TimeSeriesData(double value, Unit unit, ModelIdentifier modelIdentifier, OffsetDateTime timestamp) {
-        this.id = new TimeSeriesDataId(null, timestamp);
+        this.id = new TimeSeriesDataId(timestamp, modelIdentifier);
         this.value = value;
         this.unit = unit;
-        this.modelIdentifier = modelIdentifier;
     }
 
     public TimeSeriesDataId getId() {
@@ -60,26 +51,7 @@ public class TimeSeriesData {
         this.unit = unit;
     }
 
-    public ModelIdentifier getModelIdentifier() {
-        return modelIdentifier;
-    }
-
-    public void setModelIdentifier(ModelIdentifier modelIdentifier) {
-        this.modelIdentifier = modelIdentifier;
-    }
-
     @Transient
-    public Long getSimpleId() {
-        return id != null ? id.getId() : null;
-    }
-
-    public void setSimpleId(Long simpleId) {
-        if (this.id == null) {
-            this.id = new TimeSeriesDataId();
-        }
-        this.id.setId(simpleId);
-    }
-
     public OffsetDateTime getTimestamp() {
         return id != null ? id.getTimestamp() : null;
     }
@@ -89,5 +61,17 @@ public class TimeSeriesData {
             this.id = new TimeSeriesDataId();
         }
         this.id.setTimestamp(timestamp);
+    }
+
+    @Transient
+    public ModelIdentifier getModelIdentifier() {
+        return id != null ? id.getModelIdentifier() : null;
+    }
+
+    public void setModelIdentifier(ModelIdentifier modelIdentifier) {
+        if (this.id == null) {
+            this.id = new TimeSeriesDataId();
+        }
+        this.id.setModelIdentifier(modelIdentifier);
     }
 }

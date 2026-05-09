@@ -1,31 +1,23 @@
 package xyz.energytrading.timeseries.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
+import jakarta.persistence.*;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 
 @Embeddable
 public class TimeSeriesDataId implements Serializable {
-    @Column(name = "id")
-    private Long id;
     @Column(name = "timestamp")
     private OffsetDateTime timestamp;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "model_identifier")
+    private ModelIdentifier modelIdentifier;
 
     public TimeSeriesDataId() {}
 
-    public TimeSeriesDataId(Long id, OffsetDateTime timestamp) {
-        this.id = id;
+    public TimeSeriesDataId(OffsetDateTime timestamp, ModelIdentifier modelIdentifier) {
         this.timestamp = timestamp;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+        this.modelIdentifier = modelIdentifier;
     }
 
     public OffsetDateTime getTimestamp() {
@@ -36,16 +28,24 @@ public class TimeSeriesDataId implements Serializable {
         this.timestamp = timestamp;
     }
 
+    public ModelIdentifier getModelIdentifier() {
+        return modelIdentifier;
+    }
+
+    public void setModelIdentifier(ModelIdentifier modelIdentifier) {
+        this.modelIdentifier = modelIdentifier;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TimeSeriesDataId that = (TimeSeriesDataId) o;
-        return Objects.equals(id, that.id) && Objects.equals(timestamp, that.timestamp);
+        return Objects.equals(timestamp, that.timestamp) && modelIdentifier == that.modelIdentifier;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, timestamp);
+        return Objects.hash(timestamp, modelIdentifier);
     }
 }

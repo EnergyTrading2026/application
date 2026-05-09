@@ -10,6 +10,4 @@ import java.util.Optional;
 
 public interface TimeSeriesDataRepository extends JpaRepository<TimeSeriesData, TimeSeriesDataId> {
     List<TimeSeriesData> findAllByTimestampBetween(OffsetDateTime start, OffsetDateTime end);
-    Optional<TimeSeriesData> findById(Long id);
-    void deleteById(Long id);
 }
