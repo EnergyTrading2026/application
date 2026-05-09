@@ -3,6 +3,9 @@ spring:
     port: 8080
   application:
     name: energy-trading
+  docker:
+    compose:
+      enabled: false
   jpa:
     hibernate:
       ddl-auto: validate

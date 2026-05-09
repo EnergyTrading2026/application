@@ -8,14 +8,20 @@ import java.time.OffsetDateTime;
 public class TimeSeriesData {
 
     @EmbeddedId
+    @AttributeOverrides({
+        @AttributeOverride(name = "id", column = @Column(name = "id")),
+        @AttributeOverride(name = "timestamp", column = @Column(name = "timestamp"))
+    })
     private TimeSeriesDataId id;
 
     @Column(name = "value", nullable = false)
     private double value;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "unit", nullable = false)
     private Unit unit;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "model_identifier", nullable = false)
     private ModelIdentifier modelIdentifier;
 

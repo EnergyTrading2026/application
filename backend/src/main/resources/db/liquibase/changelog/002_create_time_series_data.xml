@@ -12,8 +12,10 @@
             </not>
         </preConditions>
         
+        <createSequence sequenceName="time_series_data_id_seq" startValue="1" incrementBy="1"/>
+        
         <createTable tableName="time_series_data">
-            <column name="id" type="BIGSERIAL" autoIncrement="true">
+            <column name="id" type="BIGINT" defaultValueSequenceNext="time_series_data_id_seq">
                 <constraints nullable="false"/>
             </column>
             <column name="value" type="DOUBLE PRECISION">
@@ -39,6 +41,7 @@
         
         <rollback>
             <dropTable tableName="time_series_data"/>
+            <dropSequence sequenceName="time_series_data_id_seq"/>
         </rollback>
     </changeSet>
 </databaseChangeLog>

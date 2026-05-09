@@ -1,5 +1,6 @@
 package xyz.energytrading.timeseries.models;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
@@ -7,7 +8,9 @@ import java.util.Objects;
 
 @Embeddable
 public class TimeSeriesDataId implements Serializable {
+    @Column(name = "id")
     private Long id;
+    @Column(name = "timestamp")
     private OffsetDateTime timestamp;
 
     public TimeSeriesDataId() {}

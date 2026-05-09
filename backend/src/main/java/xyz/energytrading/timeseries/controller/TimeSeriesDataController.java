@@ -38,24 +38,11 @@ public class TimeSeriesDataController {
         return ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/tag/{tag}")
-    public ResponseEntity<List<TimeSeriesDataDTO>> getTimeSeriesDataByTag(@PathVariable String tag) {
-        return ResponseEntity.ok(timeSeriesDataService.getAllByTag(tag));
-    }
-
     @GetMapping("/range")
     public ResponseEntity<List<TimeSeriesDataDTO>> getTimeSeriesDataByDateRange(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime start,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime end) {
         return ResponseEntity.ok(timeSeriesDataService.getAllByDateRange(start, end));
-    }
-
-    @GetMapping("/tag/{tag}/range")
-    public ResponseEntity<List<TimeSeriesDataDTO>> getTimeSeriesDataByTagAndDateRange(
-            @PathVariable String tag,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime start,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime end) {
-        return ResponseEntity.ok(timeSeriesDataService.getAllByTagAndDateRange(tag, start, end));
     }
 
     @DeleteMapping("/{id}")
