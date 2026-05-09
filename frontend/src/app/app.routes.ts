@@ -26,9 +26,8 @@ export const routes: Routes = [
     data: { title: 'Status' },
   },
   {
-    path: 'simulation',
-    loadComponent: () =>
-      import('./placeholder/placeholder').then((m) => m.Placeholder),
-    data: { title: 'Simulation' },
+  path: 'simulation',
+  loadComponent: () =>
+    import('./simulation/simulation').then((m) => m.Simulation),
   },
 ];
