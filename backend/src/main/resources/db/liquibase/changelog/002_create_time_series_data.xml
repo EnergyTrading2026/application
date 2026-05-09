@@ -11,26 +11,32 @@
                 <tableExists tableName="time_series_data"/>
             </not>
         </preConditions>
+        
         <createTable tableName="time_series_data">
             <column name="id" type="BIGSERIAL" autoIncrement="true">
-                <constraints primaryKey="true" primaryKeyName="pk_time_series_data_id" nullable="false"/>
-            </column>
-            <column name="tag" type="VARCHAR(255)" defaultValue="">
                 <constraints nullable="false"/>
             </column>
             <column name="value" type="DOUBLE PRECISION">
                 <constraints nullable="false"/>
             </column>
-            <column name="unit" type="VARCHAR(50)" defaultValue="">
+            <column name="unit" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="model_identifier" type="VARCHAR(50)">
                 <constraints nullable="false"/>
             </column>
             <column name="timestamp" type="TIMESTAMPTZ">
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <sql>
-            SELECT create_hypertable('time_series_data', 'timestamp');
-        </sql>
+        
+        <addPrimaryKey
+                tableName="time_series_data"
+                columnNames="id, timestamp"
+                constraintName="pk_time_series_data"/>
+        
+        <sql>SELECT create_hypertable('time_series_data', 'timestamp')</sql>
+        
         <rollback>
             <dropTable tableName="time_series_data"/>
         </rollback>

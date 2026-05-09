@@ -1,6 +1,6 @@
 package xyz.energytrading.timeseries.dto;
 
-import xyz.energytrading.timeseries.models.ModelTag;
+import xyz.energytrading.timeseries.models.ModelIdentifier;
 import xyz.energytrading.timeseries.models.Unit;
 
 import java.time.OffsetDateTime;
@@ -8,18 +8,18 @@ import java.time.OffsetDateTime;
 public class TimeSeriesDataDTO {
 
     private Long id;
-    private ModelTag tag;
     private double value;
     private Unit unit;
+    private ModelIdentifier modelIdentifier;
     private OffsetDateTime timestamp;
 
     public TimeSeriesDataDTO() {}
 
-    public TimeSeriesDataDTO(Long id, ModelTag tag, double value, Unit unit, OffsetDateTime timestamp) {
+    public TimeSeriesDataDTO(Long id, double value, Unit unit, ModelIdentifier modelIdentifier, OffsetDateTime timestamp) {
         this.id = id;
-        this.tag = tag;
         this.value = value;
         this.unit = unit;
+        this.modelIdentifier = modelIdentifier;
         this.timestamp = timestamp;
     }
 
@@ -29,14 +29,6 @@ public class TimeSeriesDataDTO {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public ModelTag getTag() {
-        return tag;
-    }
-
-    public void setTag(ModelTag tag) {
-        this.tag = tag;
     }
 
     public double getValue() {
@@ -53,6 +45,14 @@ public class TimeSeriesDataDTO {
 
     public void setUnit(Unit unit) {
         this.unit = unit;
+    }
+
+    public ModelIdentifier getModelIdentifier() {
+        return modelIdentifier;
+    }
+
+    public void setModelIdentifier(ModelIdentifier modelIdentifier) {
+        this.modelIdentifier = modelIdentifier;
     }
 
     public OffsetDateTime getTimestamp() {

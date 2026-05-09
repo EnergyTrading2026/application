@@ -1,21 +1,20 @@
 spring:
-  docker:
-    compose:
-      enabled: true
-      file: compose.yaml
   server:
     port: 8080
   application:
-    name: demo
+    name: energy-trading
   jpa:
     hibernate:
       ddl-auto: validate
     show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
   datasource:
-    url: jdbc:postgresql://localhost:5432/demo_database
-    username: username
-    password: password
-    driverClassName: org.postgresql.Driver
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/energy_trading}
+    username: ${SPRING_DATASOURCE_USERNAME:energy}
+    password: ${SPRING_DATASOURCE_PASSWORD:energy123}
+    driver-class-name: ${SPRING_DATASOURCE_DRIVER-CLASS-NAME:org.postgresql.Driver}
   liquibase:
-    enabled: true
+    enabled: ${SPRING_LIQUIBASE_ENABLED:true}
     change-log: classpath:db/liquibase/master.xml

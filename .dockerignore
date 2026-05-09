@@ -1,0 +1,7 @@
+backend/build
+backend/gradlew
+backend/gradlew.bat
+backend/gradle
+.DS_Store
+.git
+.gitignore
