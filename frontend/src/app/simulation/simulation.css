@@ -13,3 +13,76 @@ svg {
   display: block;
   margin: 20px auto;
 }
+
+.popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.popup-box {
+  background: #2e3338;
+  border-radius: 12px;
+  padding: 24px;
+  min-width: 280px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  color: #ffffff;
+
+  h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  label {
+    font-size: 13px;
+    color: #aaaaaa;
+  }
+
+  input {
+    background: #3c4147;
+    border: 1px solid #5a6068;
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 15px;
+    padding: 8px 12px;
+    outline: none;
+    width: 100%;
+    box-sizing: border-box;
+
+    &:focus {
+      border-color: #6e9fff;
+    }
+  }
+
+  .popup-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+
+    button {
+      border: none;
+      border-radius: 8px;
+      padding: 8px 18px;
+      font-size: 14px;
+      cursor: pointer;
+
+      &.cancel {
+        background: #4a5157;
+        color: #ffffff;
+      }
+
+      &.confirm {
+        background: #4a90d9;
+        color: #ffffff;
+        font-weight: bold;
+      }
+    }
+  }
+}

@@ -1,14 +1,80 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
 
 @Component({
   selector: 'app-simulation',
-  imports: [],
+  imports: [CommonModule, FormsModule],
   templateUrl: './simulation.html',
   styleUrl: './simulation.css',
 })
 export class Simulation {
+  //Powergrid begin
   PowerGridCircle = { cx: 150, cy: 250, r: 50 };
+  //Powergrid end
+
+  //Gasgrid and everything related Begin
   GasGridCircle = { cx: 150, cy: 550, r: 50 };
+
+  showGasGridMenu = false;
+  toggleGasGridMenu() { this.showGasGridMenu = !this.showGasGridMenu; }
+  GasPrice: number = 35;
+  showGasPricePopup = false;
+  tempGasPrice: number = this.GasPrice;
+
+  openGasPricePopup() {
+    this.tempGasPrice = this.GasPrice; // reset to current value
+    this.showGasPricePopup = true;
+  }
+
+  confirmGasPrice() {
+    this.GasPrice = Number(this.tempGasPrice);
+    this.showGasPricePopup = false;
+  }
+
+  cancelGasPrice() {
+    this.showGasPricePopup = false;
+  }
+
+  CO2Factor: number = 0.201;
+  showCO2FactorPopup = false;
+  tempCO2Factor: number = this.GasPrice;
+
+  openCO2FactorPopup() {
+    this.tempCO2Factor = this.CO2Factor; // reset to current value
+    this.showCO2FactorPopup = true;
+  }
+
+  confirmCO2Factor() {
+    this.CO2Factor = Number(this.tempCO2Factor);
+    this.showCO2FactorPopup = false;
+  }
+
+  cancelCO2Factor() {
+    this.showCO2FactorPopup = false;
+  }
+
+  CO2Price: number = 60;
+  showCO2PricePopup = false;
+  tempCO2Price: number = this.CO2Price;
+
+  openCO2PricePopup() {
+    this.tempCO2Price = this.CO2Price; // reset to current value
+    this.showCO2PricePopup = true;
+  }
+
+  confirmCO2Price() {
+    this.CO2Price = Number(this.tempCO2Price);
+    this.showCO2PricePopup = false;
+  }
+
+  cancelCO2Price() {
+    this.showCO2PricePopup = false;
+  }
+
+  //Gasgrid and everything related End
+
 
   HeatPumpOn: boolean = true;
   HeatPumpBox = { x: 300, y: 40, width: 115, height: 185 };
