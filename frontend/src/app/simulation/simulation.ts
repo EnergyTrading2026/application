@@ -10,14 +10,31 @@ export class Simulation {
   PowerGridCircle = { cx: 150, cy: 250, r: 50 };
   GasGridCircle = { cx: 150, cy: 550, r: 50 };
 
+  HeatPumpOn: boolean = true;
   HeatPumpBox = { x: 300, y: 40, width: 115, height: 185 };
+  onHeatPumpClick(): void {
+  this.HeatPumpOn = !this.HeatPumpOn;
+  }
+
+  CHPOn: boolean = true;
   CHPBox1 = { x: 300, y: 320, width: 115, height: 92.5 };
   CHPBox2 = { x: 300, y: 320 + 92.5, width: 115, height: 92.5 };
+  onCHPClick(): void {
+  this.CHPOn = !this.CHPOn;
+  }
+  BoilerOn: boolean = true;
   BoilerBox = { x: 300, y: 600, width: 115, height: 185 };
+  onBoilerClick(): void {
+    this.BoilerOn = !this.BoilerOn;
+  }
 
   OrCircle = { cx: 500, cy: 320 + 92.5, r: 20 };
 
+  ThermalStorageOn: boolean = true;
   ThermalStorageBox = { x: 650, y: 180, width: 115, height: 185 };
+  onThermalStorageClick(): void {
+    this.ThermalStorageOn = !this.ThermalStorageOn;
+  }
   HeatingNetworkCircle = { cx: 650 + (115 / 2), cy: 550, r: 50 };
   
   ThermalLegendBox = { x: 850, y: 650, width: 115, height: 60 };
