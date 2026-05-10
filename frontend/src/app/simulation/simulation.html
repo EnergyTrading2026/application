@@ -19,6 +19,88 @@
      <text [attr.x]="GasGridCircle.cx" 
         [attr.y]="GasGridCircle.cy + 5"
         fill= #30353A text-anchor="middle" font-size="17">Gas Grid</text>
+    
+ <!-- Gas Grid DropdownButton -->
+<rect [attr.x]="GasGridCircle.cx - GasGridCircle.r - 80" [attr.y]="GasGridCircle.cy + GasGridCircle.r" 
+      [attr.width]="90" [attr.height]="30"
+      rx="15" ry="15"
+      fill="#6e757d" stroke="none"
+      style="cursor: pointer"
+      (click)="toggleGasGridMenu()"/>
+<text [attr.x]="GasGridCircle.cx - GasGridCircle.r - 80 + 40" 
+      [attr.y]="GasGridCircle.cy + GasGridCircle.r + 20"
+      fill="#30353A" text-anchor="middle" font-size="15"
+      style="cursor: pointer"
+      text style="font-weight: bold"
+      (click)="toggleGasGridMenu()"> Gas Grid</text>
+<g [attr.transform]="'translate(' + (GasGridCircle.cx - GasGridCircle.r - 80 + 66) + ',' + (GasGridCircle.cy + GasGridCircle.r + 3) + ')'"
+   style="cursor: pointer"
+   (click)="toggleGasGridMenu()">
+  <path 
+    d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z" 
+    fill="#30353A"
+    [attr.transform]="showGasGridMenu ? 'rotate(90, 12, 12)' : 'rotate(0, 12, 12)'"/>
+</g>
+
+<!-- Gas Grid DropdownMenu -->
+@if (showGasGridMenu) {
+  <g>
+    <rect [attr.x]="GasGridCircle.cx - GasGridCircle.r - 80"
+          [attr.y]="GasGridCircle.cy + GasGridCircle.r + 33"
+          [attr.width]="210" [attr.height]="80"
+          rx="8" ry="8"
+          fill="#6e757d" stroke="#4a5157" stroke-width="1"/>
+
+    <!-- Entry 1: Gas Price -->
+    <text [attr.x]="GasGridCircle.cx - GasGridCircle.r - 70"
+          [attr.y]="GasGridCircle.cy + GasGridCircle.r + 55"
+          fill="#ffffff" font-size="12"
+          style="cursor: pointer"
+          (click)="openGasPricePopup()">
+      <tspan font-weight="bold">Gas Price:</tspan>
+      <tspan> {{ GasPrice }} € / MWh</tspan>
+      <tspan baseline-shift="sub" font-size="9"> Hs</tspan>
+      
+    </text>
+
+    <!-- Divider -->
+    <line [attr.x1]="GasGridCircle.cx - GasGridCircle.r - 72"
+          [attr.y1]="GasGridCircle.cy + GasGridCircle.r + 62"
+          [attr.x2]="GasGridCircle.cx - GasGridCircle.r + 122"
+          [attr.y2]="GasGridCircle.cy + GasGridCircle.r + 62"
+          stroke="#4a5157" stroke-width="1"/>
+
+    <!-- Entry 2: CO2 Factor -->
+    <text [attr.x]="GasGridCircle.cx - GasGridCircle.r - 70"
+          [attr.y]="GasGridCircle.cy + GasGridCircle.r + 78"
+          fill="#ffffff" font-size="12"
+          style="cursor: pointer"
+          (click)="openCO2FactorPopup()">
+      <tspan font-weight="bold">CO₂ Factor:</tspan>
+      <tspan> {{CO2Factor}} tCO₂ / MWh</tspan>
+      <tspan baseline-shift="sub" font-size="9">Hs</tspan>
+    </text>
+
+    <!-- Divider -->
+    <line [attr.x1]="GasGridCircle.cx - GasGridCircle.r - 72"
+          [attr.y1]="GasGridCircle.cy + GasGridCircle.r + 85"
+          [attr.x2]="GasGridCircle.cx - GasGridCircle.r + 122"
+          [attr.y2]="GasGridCircle.cy + GasGridCircle.r + 85"
+          stroke="#4a5157" stroke-width="1"/>
+
+    <!-- Entry 3: CO2 Price -->
+    <text [attr.x]="GasGridCircle.cx - GasGridCircle.r - 70"
+          [attr.y]="GasGridCircle.cy + GasGridCircle.r + 101"
+          fill="#ffffff" font-size="12"
+          style="cursor: pointer"
+          (click)="openCO2PricePopup()">
+      <tspan font-weight="bold">CO₂ Price:</tspan>
+      <tspan> 60 € / tCO₂</tspan>
+    </text>
+  </g>
+}
+
+
 
   
 
@@ -229,3 +311,51 @@
     </defs>
 
 </svg>
+
+@if (showGasPricePopup) {
+  <div class="popup-overlay" (click)="cancelGasPrice()">
+    <div class="popup-box" (click)="$event.stopPropagation()">
+      <label>Gas Price (€ / MWh<sub>Hs</sub>)</label>
+      <input 
+        type="number" 
+        [(ngModel)]="tempGasPrice"
+        (keyup.enter)="confirmGasPrice()"/>
+      <div class="popup-actions">
+        <button class="cancel" (click)="cancelGasPrice()">Cancel</button>
+        <button class="confirm" (click)="confirmGasPrice()">Confirm</button>
+      </div>
+    </div>
+  </div> 
+}
+
+@if (showCO2FactorPopup) {
+  <div class="popup-overlay" (click)="cancelCO2Factor()">
+    <div class="popup-box" (click)="$event.stopPropagation()">
+      <label>CO2Factor (tCO₂ / MWh)</label>
+      <input 
+        type="number" 
+        [(ngModel)]="tempCO2Factor"
+        (keyup.enter)="confirmCO2Factor()"/>
+      <div class="popup-actions">
+        <button class="cancel" (click)="cancelCO2Factor()">Cancel</button>
+        <button class="confirm" (click)="confirmCO2Factor()">Confirm</button>
+      </div>
+    </div>
+  </div> 
+}
+
+@if (showCO2PricePopup) {
+  <div class="popup-overlay" (click)="cancelCO2Price()">
+    <div class="popup-box" (click)="$event.stopPropagation()">
+      <label>CO2Price (tCO₂ / MWh)</label>
+      <input 
+        type="number" 
+        [(ngModel)]="tempCO2Price"
+        (keyup.enter)="confirmCO2Price()"/>
+      <div class="popup-actions">
+        <button class="cancel" (click)="cancelCO2Price()">Cancel</button>
+        <button class="confirm" (click)="confirmCO2Price()">Confirm</button>
+      </div>
+    </div>
+  </div> 
+}
