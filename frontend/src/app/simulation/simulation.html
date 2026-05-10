@@ -41,37 +41,51 @@
 
     <!-- Large-Scale Heat Pump -->
   <rect [attr.x]="HeatPumpBox.x" [attr.y]="HeatPumpBox.y" 
-        [attr.width]="HeatPumpBox.width" [attr.height]="HeatPumpBox.height"
-        rx="15" ry="15"
-        fill="url(#whiteToRedGradient)" stroke="none"/>
+      [attr.width]="HeatPumpBox.width" [attr.height]="HeatPumpBox.height"
+      rx="15" ry="15"
+      [attr.fill]="HeatPumpOn ? 'url(#whiteToRedGradient)' : '#A8ABCD'"
+      stroke="none"
+      (click)="onHeatPumpClick()"
+      style="cursor: pointer;"/>
   <text [attr.x]="HeatPumpBox.x + HeatPumpBox.width / 2" 
         [attr.y]="HeatPumpBox.y + HeatPumpBox.height / 2"
+        (click)="onHeatPumpClick()"
         fill= #613B3C text-anchor="middle" font-size="17">Large-Scale</text>
   <text [attr.x]="HeatPumpBox.x + HeatPumpBox.width / 2" 
         [attr.y]="HeatPumpBox.y + HeatPumpBox.height / 2 + 20"
+        (click)="onHeatPumpClick()"
         fill= #613B3C text-anchor="middle" font-size="17">Heat Pump</text>
 
     <!-- CHP -->
   <rect [attr.x]="CHPBox1.x" [attr.y]="CHPBox1.y" 
         [attr.width]="CHPBox1.width" [attr.height]="CHPBox1.height"
-        fill="url(#greyWhiteGradient)" stroke="none"/>
+        [attr.fill]="CHPOn ? 'url(#greyWhiteGradient)' : '#A8ABCD' " stroke="none"
+        (click)="onCHPClick()"
+        style="cursor: pointer;"/>
     <rect [attr.x]="CHPBox2.x" [attr.y]="CHPBox2.y" 
         [attr.width]="CHPBox2.width" [attr.height]="CHPBox2.height"
-        fill="url(#greyRedGradient)" stroke="none"/>
+        [attr.fill]="CHPOn ? 'url(#greyRedGradient)' : '#A8ABCD' " stroke="none"
+        (click)="onCHPClick()"
+        style="cursor: pointer;"/>
     <text [attr.x]="CHPBox1.x + CHPBox1.width / 2" 
         [attr.y]="CHPBox1.y + CHPBox1.height + 5"
+        (click)="onCHPClick()"
         fill= #443A3E text-anchor="middle" font-size="17">CHP</text>
 
     <!-- Condensing Boiler -->
   <rect [attr.x]="BoilerBox.x" [attr.y]="BoilerBox.y" 
         [attr.width]="BoilerBox.width" [attr.height]="BoilerBox.height"
         rx="15" ry="15"
-        fill="url(#greyRedGradient)" stroke="none"/>
+        [attr.fill]="BoilerOn ? 'url(#greyRedGradient)' : '#A8ABCD' " stroke="none"
+        (click)="onBoilerClick()"
+        style="cursor: pointer;"/>
   <text [attr.x]="BoilerBox.x + BoilerBox.width / 2" 
         [attr.y]="BoilerBox.y + BoilerBox.height / 2"
+        (click)="onBoilerClick()"
         fill= #542D2E text-anchor="middle" font-size="17">Condensing</text>
   <text [attr.x]="BoilerBox.x + BoilerBox.width / 2" 
         [attr.y]="BoilerBox.y + BoilerBox.height / 2 + 20"
+        (click)="onBoilerClick()"
         fill= #542D2E text-anchor="middle" font-size="17">Boiler</text>
 
      <!-- Arrow: Large-Scale Heat Pump RIGHT to Or TOP -->
@@ -113,12 +127,16 @@
   <rect [attr.x]="ThermalStorageBox.x" [attr.y]="ThermalStorageBox.y" 
         [attr.width]="ThermalStorageBox.width" [attr.height]="ThermalStorageBox.height"
         rx="15" ry="15"
-        fill= #e25b5b stroke="none"/>
+        [attr.fill]="ThermalStorageOn ? '#e25b5b' : '#A8ABCD' " stroke="none"
+        (click)="onThermalStorageClick()"
+        style="cursor: pointer;"/>
   <text [attr.x]="ThermalStorageBox.x + ThermalStorageBox.width / 2" 
         [attr.y]="ThermalStorageBox.y + ThermalStorageBox.height / 2"
+        (click)="onThermalStorageClick()"
         fill= #6D2626 text-anchor="middle" font-size="17">Thermal</text>
   <text [attr.x]="ThermalStorageBox.x + ThermalStorageBox.width / 2" 
         [attr.y]="ThermalStorageBox.y + ThermalStorageBox.height / 2 + 20"
+        (click)="onThermalStorageClick()"
         fill= #6D2626 text-anchor="middle" font-size="17">Storage</text>
 
     <!-- District Heating Network -->
