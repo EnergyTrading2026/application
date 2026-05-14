@@ -12,7 +12,7 @@ export class App {
     { label: 'Dashboard', path: '/dashboard' },
     { label: 'Forecasts', path: '/forecasting' },
     { label: 'Comparisons', path: '/comparisons' },
-    { label: 'Status', path: '/status' },
+    { label: 'Monitoring', path: '/monitoring' },
     { label: 'Simulation', path: '/simulation' },
   ];
 }
