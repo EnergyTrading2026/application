@@ -27,3 +27,7 @@ curl -X POST http://localhost:8080/api/time-series \
   -H "Content-Type: application/json" \
   -d '{"value": 1500.0, "unit": "EUR", "modelIdentifier": "MILP", "timestamp": "2025-05-09T10:00:00+00"}'
 ```
+
+## Swagger 
+For local runs Swagger UI is available at http://localhost:8080/swagger-ui.html (excluded for later prod deployments)
+
