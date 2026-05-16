@@ -46,7 +46,7 @@
   <g>
     <rect [attr.x]="GasGridCircle.cx - GasGridCircle.r - 80"
           [attr.y]="GasGridCircle.cy + GasGridCircle.r + 33"
-          [attr.width]="210" [attr.height]="80"
+          [attr.width]="190" [attr.height]="80"
           rx="8" ry="8"
           fill="#6e757d" stroke="#4a5157" stroke-width="1"/>
 
@@ -65,7 +65,7 @@
     <!-- Divider -->
     <line [attr.x1]="GasGridCircle.cx - GasGridCircle.r - 72"
           [attr.y1]="GasGridCircle.cy + GasGridCircle.r + 62"
-          [attr.x2]="GasGridCircle.cx - GasGridCircle.r + 122"
+          [attr.x2]="GasGridCircle.cx - GasGridCircle.r + 105"
           [attr.y2]="GasGridCircle.cy + GasGridCircle.r + 62"
           stroke="#4a5157" stroke-width="1"/>
 
@@ -83,7 +83,7 @@
     <!-- Divider -->
     <line [attr.x1]="GasGridCircle.cx - GasGridCircle.r - 72"
           [attr.y1]="GasGridCircle.cy + GasGridCircle.r + 85"
-          [attr.x2]="GasGridCircle.cx - GasGridCircle.r + 122"
+          [attr.x2]="GasGridCircle.cx - GasGridCircle.r + 105"
           [attr.y2]="GasGridCircle.cy + GasGridCircle.r + 85"
           stroke="#4a5157" stroke-width="1"/>
 
@@ -137,6 +137,89 @@
         (click)="onHeatPumpClick()"
         fill= #613B3C text-anchor="middle" font-size="17">Heat Pump</text>
 
+  <!-- Heat Pump DropdownButton -->
+<rect [attr.x]="HeatPumpBox.x - HeatPumpBox.width" [attr.y]="HeatPumpBox.y  + 5" 
+      [attr.width]="105" [attr.height]="30"
+      rx="15" ry="15"
+      fill='url(#whiteToRedGradient)' stroke="none"
+      style="cursor: pointer"
+      (click)="toggleHeatPumpMenu()"/>
+<text [attr.x]="HeatPumpBox.x - HeatPumpBox.width + 45" 
+      [attr.y]="HeatPumpBox.y  + 25"
+      fill="#30353A" text-anchor="middle" font-size="15"
+      style="cursor: pointer ; font-weight: bold"
+      (click)="toggleHeatPumpMenu()"> Heat Pump</text>
+<g [attr.transform]="'translate(' + (HeatPumpBox.x - HeatPumpBox.width + 80) + ',' + (HeatPumpBox.y + 9) + ')'"
+   style="cursor: pointer"
+   (click)="toggleHeatPumpMenu()">
+  <path 
+    d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z" 
+    fill="#30353A"
+    [attr.transform]="showGasGridMenu ? 'rotate(90, 12, 12)' : 'rotate(0, 12, 12)'"/>
+</g>
+
+<!-- Gas Grid DropdownMenu -->
+@if (showHeatPumpMenu) {
+  <g>
+    <rect [attr.x]="HeatPumpBox.x - HeatPumpBox.width * 2 + 30" 
+          [attr.y]="HeatPumpBox.y  + 55"
+          [attr.width]="190" [attr.height]="80"
+          rx="8" ry="8"
+          fill='url(#whiteToRedGradient)' stroke="#4a5157" stroke-width="1"/>
+
+    <!-- Entry 1: Rated Electrical Power -->
+    <text [attr.x]="HeatPumpBox.x - HeatPumpBox.width * 2 + 35" 
+          [attr.y]="HeatPumpBox.y  + 75"
+          fill="#000000" font-size="12"
+          style="cursor: pointer"
+          (click)="openRatedElectricalPowerPopup()">
+      <tspan font-weight="bold">Rated Electrical Power:</tspan>
+      <tspan> {{ RatedElectricalPower }} MW</tspan> 
+      <tspan baseline-shift="sub" font-size="9"> el</tspan>
+      
+    </text>
+
+    <!-- Divider -->
+    <line [attr.x1]="HeatPumpBox.x - HeatPumpBox.width * 2 + 35"
+          [attr.y1]="HeatPumpBox.y + 83"
+          [attr.x2]="HeatPumpBox.x - HeatPumpBox.width * 2 + 215"
+          [attr.y2]="HeatPumpBox.y + 83"
+          stroke="#2a0107" stroke-width="1"/>
+
+     <!-- Entry 2: Min. Power -->
+    <text [attr.x]="HeatPumpBox.x - HeatPumpBox.width * 2 + 35" 
+          [attr.y]="HeatPumpBox.y  + 100"
+          fill="#000000" font-size="12"
+          style="cursor: pointer"
+          (click)="openMinPowerPopup()">
+      <tspan font-weight="bold">Min. Power:</tspan>
+      <tspan> {{ MinPower }} MW</tspan> 
+      <tspan baseline-shift="sub" font-size="9"> el</tspan>
+      
+    </text>
+
+    <!-- Divider -->
+    <line [attr.x1]="HeatPumpBox.x - HeatPumpBox.width * 2 + 35"
+          [attr.y1]="HeatPumpBox.y + 107"
+          [attr.x2]="HeatPumpBox.x - HeatPumpBox.width * 2 + 215"
+          [attr.y2]="HeatPumpBox.y + 107"
+          stroke="#2a0107" stroke-width="1"/>
+
+     <!-- Entry 2: COP -->
+    <text [attr.x]="HeatPumpBox.x - HeatPumpBox.width * 2 + 35" 
+          [attr.y]="HeatPumpBox.y  + 125"
+          fill="#000000" font-size="12"
+          style="cursor: pointer"
+          (click)="openCOPPopup()">
+      <tspan font-weight="bold">COP:</tspan>
+      <tspan> {{ COP }} MW</tspan> 
+      <tspan baseline-shift="sub" font-size="9"> th</tspan>
+      <tspan> / MW</tspan> 
+      <tspan baseline-shift="sub" font-size="9"> el</tspan>
+    </text>
+  </g>
+}
+
     <!-- CHP -->
   <rect [attr.x]="CHPBox1.x" [attr.y]="CHPBox1.y" 
         [attr.width]="CHPBox1.width" [attr.height]="CHPBox1.height"
@@ -153,6 +236,192 @@
         (click)="onCHPClick()"
         fill= #443A3E text-anchor="middle" font-size="17">CHP</text>
 
+  <!-- CHP DropdownButton -->
+<rect [attr.x]="CHPBox1.x - CHPBox1.width + 10" [attr.y]="CHPBox1.y + 5" 
+      [attr.width]="70" [attr.height]="30"
+      rx="15" ry="15"
+      fill='url(#greyWhiteGradient)' stroke="none"
+      style="cursor: pointer"
+      (click)="toggleCHPMenu()"/>
+<text [attr.x]="CHPBox1.x - CHPBox1.width - 5 + 40" 
+      [attr.y]="CHPBox1.y + 25"
+      fill="#30353A" text-anchor="middle" font-size="15"
+      style="cursor: pointer; font-weight: bold"
+      (click)="toggleCHPMenu()">CHP</text>
+<g [attr.transform]="'translate(' + (CHPBox1.x - CHPBox1.width - 5 + 60) + ',' + (CHPBox1.y + 9) + ')'"
+   style="cursor: pointer"
+   (click)="toggleCHPMenu()">
+  <path 
+    d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z" 
+    fill="#30353A"
+    [attr.transform]="showCHPMenu ? 'rotate(90, 12, 12)' : 'rotate(0, 12, 12)'"/>
+</g>
+
+<!-- CHP DropdownMenu -->
+@if (showCHPMenu) {
+  <g>
+    <rect [attr.x]="CHPBox1.x - CHPBox1.width * 2 - 30"
+          [attr.y]="CHPBox1.y + 50"
+          [attr.width]="230" [attr.height]="225"
+          rx="8" ry="8"
+          fill='url(#greyWhiteGradient)' stroke="#4a5157" stroke-width="1"/>
+
+    <!-- Entry 1: Electrical Power max. -->
+    <text [attr.x]="CHPBox1.x - CHPBox1.width * 2 - 20"
+          [attr.y]="CHPBox1.y + 70"
+          fill="#000000" font-size="12"
+          style="cursor: pointer"
+          (click)="openCHPElectricalPowerMaxPopup()">
+      <tspan font-weight="bold">Electrical Power max.:</tspan>
+      <tspan> {{ CHPElectricalPowerMax }} MW</tspan>
+      <tspan baseline-shift="sub" font-size="9"> el</tspan>
+    </text>
+
+    <!-- Divider -->
+    <line [attr.x1]="CHPBox1.x - CHPBox1.width * 2 - 20"
+          [attr.y1]="CHPBox1.y + 80"
+          [attr.x2]="CHPBox1.x - CHPBox1.width * 2 + 190"
+          [attr.y2]="CHPBox1.y + 80"
+          stroke="#2a0107" stroke-width="1"/>
+
+    <!-- Entry 2: Electrical Power min. -->
+    <text [attr.x]="CHPBox1.x - CHPBox1.width * 2 - 20"
+          [attr.y]="CHPBox1.y + 95"
+          fill="#000000" font-size="12"
+          style="cursor: pointer"
+          (click)="openCHPElectricalPowerMinPopup()">
+      <tspan font-weight="bold">Electrical Power min.:</tspan>
+      <tspan> {{ CHPElectricalPowerMin }} MW</tspan>
+      <tspan baseline-shift="sub" font-size="9"> el</tspan>
+    </text>
+
+    <!-- Divider -->
+    <line [attr.x1]="CHPBox1.x - CHPBox1.width * 2 - 20"
+          [attr.y1]="CHPBox1.y + 105"
+          [attr.x2]="CHPBox1.x - CHPBox1.width * 2 + 190"
+          [attr.y2]="CHPBox1.y + 105"
+          stroke="#2a0107" stroke-width="1"/>
+
+    <!-- Entry 3: Thermal Power max. -->
+    <text [attr.x]="CHPBox1.x - CHPBox1.width * 2 - 20"
+          [attr.y]="CHPBox1.y + 120"
+          fill="#000000" font-size="12"
+          style="cursor: pointer"
+          (click)="openCHPThermalPowerMaxPopup()">
+      <tspan font-weight="bold">Thermal Power max.:</tspan>
+      <tspan> {{ CHPThermalPowerMax }} MW</tspan>
+      <tspan baseline-shift="sub" font-size="9"> th</tspan>
+    </text>
+
+    <!-- Divider -->
+    <line [attr.x1]="CHPBox1.x - CHPBox1.width * 2 - 20"
+          [attr.y1]="CHPBox1.y + 130"
+          [attr.x2]="CHPBox1.x - CHPBox1.width * 2 + 190"
+          [attr.y2]="CHPBox1.y + 130"
+          stroke="#2a0107" stroke-width="1"/>
+
+    <!-- Entry 4: Electrical Efficiency -->
+    <text [attr.x]="CHPBox1.x - CHPBox1.width * 2 - 20"
+          [attr.y]="CHPBox1.y + 145"
+          fill="#000000" font-size="12"
+          style="cursor: pointer"
+          (click)="openCHPElectricalEfficiencyPopup()">
+      <tspan font-weight="bold">Electrical Efficiency:</tspan>
+      <tspan> {{ CHPElectricalEfficiency }} MW</tspan>
+      <tspan baseline-shift="sub" font-size="9"> el</tspan>
+      <tspan> / MW</tspan>
+      <tspan baseline-shift="sub" font-size="9"> Hs</tspan>
+    </text>
+
+    <!-- Divider -->
+    <line [attr.x1]="CHPBox1.x - CHPBox1.width * 2 - 20"
+          [attr.y1]="CHPBox1.y + 155"
+          [attr.x2]="CHPBox1.x - CHPBox1.width * 2 + 190"
+          [attr.y2]="CHPBox1.y + 155"
+          stroke="#2a0107" stroke-width="1"/>
+
+    <!-- Entry 5: Thermal Efficiency -->
+    <text [attr.x]="CHPBox1.x - CHPBox1.width * 2 - 20"
+          [attr.y]="CHPBox1.y + 170"
+          fill="#000000" font-size="12"
+          style="cursor: pointer"
+          (click)="openCHPThermalEfficiencyPopup()">
+      <tspan font-weight="bold">Thermal Efficiency:</tspan>
+      <tspan> {{ CHPThermalEfficiency }} MW</tspan>
+      <tspan baseline-shift="sub" font-size="9"> th</tspan>
+      <tspan> / MW</tspan>
+      <tspan baseline-shift="sub" font-size="9"> Hs</tspan>
+    </text>
+
+    <!-- Divider -->
+    <line [attr.x1]="CHPBox1.x - CHPBox1.width * 2 - 20"
+          [attr.y1]="CHPBox1.y + 180"
+          [attr.x2]="CHPBox1.x - CHPBox1.width * 2 + 190"
+          [attr.y2]="CHPBox1.y + 180"
+          stroke="#2a0107" stroke-width="1"/>
+
+    <!-- Entry 6: Overall Efficiency -->
+    <text [attr.x]="CHPBox1.x - CHPBox1.width * 2 - 20"
+          [attr.y]="CHPBox1.y + 195"
+          fill="#000000" font-size="12"
+          style="cursor: pointer"
+          (click)="openCHPOverallEfficiencyPopup()">
+      <tspan font-weight="bold">Overall Efficiency:</tspan>
+      <tspan> {{ CHPOverallEfficiency }}</tspan>
+    </text>
+
+    <!-- Divider -->
+    <line [attr.x1]="CHPBox1.x - CHPBox1.width * 2 - 20"
+          [attr.y1]="CHPBox1.y + 203"
+          [attr.x2]="CHPBox1.x - CHPBox1.width * 2 + 190"
+          [attr.y2]="CHPBox1.y + 203"
+          stroke="#2a0107" stroke-width="1"/>
+
+    <!-- Entry 7: Minimum Run Time -->
+    <text [attr.x]="CHPBox1.x - CHPBox1.width * 2 - 20"
+          [attr.y]="CHPBox1.y + 218"
+          fill="#000000" font-size="12"
+          style="cursor: pointer"
+          (click)="openCHPMinRunTimePopup()">
+      <tspan font-weight="bold">Min. Run Time:</tspan>
+      <tspan> {{ CHPMinRunTime }} Intervals</tspan>
+    </text>
+
+    <!-- Divider -->
+    <line [attr.x1]="CHPBox1.x - CHPBox1.width * 2 - 20"
+          [attr.y1]="CHPBox1.y + 225"
+          [attr.x2]="CHPBox1.x - CHPBox1.width * 2 + 190"
+          [attr.y2]="CHPBox1.y + 225"
+          stroke="#2a0107" stroke-width="1"/>
+
+    <!-- Entry 8: Minimum Downtime -->
+    <text [attr.x]="CHPBox1.x - CHPBox1.width * 2 - 20"
+          [attr.y]="CHPBox1.y + 242"
+          fill="#000000" font-size="12"
+          style="cursor: pointer"
+          (click)="openCHPMinDowntimePopup()">
+      <tspan font-weight="bold">Min. Downtime:</tspan>
+      <tspan> {{ CHPMinDowntime }} Intervals</tspan>
+    </text>
+
+    <!-- Divider -->
+    <line [attr.x1]="CHPBox1.x - CHPBox1.width * 2 - 20"
+          [attr.y1]="CHPBox1.y + 250"
+          [attr.x2]="CHPBox1.x - CHPBox1.width * 2 + 190"
+          [attr.y2]="CHPBox1.y + 250"
+          stroke="#2a0107" stroke-width="1"/>
+
+    <!-- Entry 9: Start-up Costs -->
+    <text [attr.x]="CHPBox1.x - CHPBox1.width * 2 - 20"
+          [attr.y]="CHPBox1.y + 265"
+          fill="#000000" font-size="12"
+          style="cursor: pointer"
+          (click)="openCHPStartupCostsPopup()">
+      <tspan font-weight="bold">Start-up Costs:</tspan>
+      <tspan> {{ CHPStartupCosts }} €</tspan>
+    </text>
+  </g>
+}
     <!-- Condensing Boiler -->
   <rect [attr.x]="BoilerBox.x" [attr.y]="BoilerBox.y" 
         [attr.width]="BoilerBox.width" [attr.height]="BoilerBox.height"
@@ -168,6 +437,121 @@
         [attr.y]="BoilerBox.y + BoilerBox.height / 2 + 20"
         (click)="onBoilerClick()"
         fill= #542D2E text-anchor="middle" font-size="17">Boiler</text>
+
+  <!-- Boiler DropdownButton -->
+<rect [attr.x]="BoilerBox.x + BoilerBox.width + 10" [attr.y]="BoilerBox.y + BoilerBox.height / 2 + 10" 
+      [attr.width]="75" [attr.height]="30"
+      rx="15" ry="15"
+      fill='url(#greyRedGradient)' stroke="none"
+      style="cursor: pointer"
+      (click)="toggleBoilerMenu()"/>
+<text [attr.x]="BoilerBox.x + BoilerBox.width + 40" 
+      [attr.y]="BoilerBox.y  + BoilerBox.height / 2 + 30"
+      fill="#30353A" text-anchor="middle" font-size="15"
+      style="cursor: pointer; font-weight: bold"
+      (click)="toggleBoilerMenu()">Boiler</text>
+<g [attr.transform]="'translate(' + (BoilerBox.x + BoilerBox.width + 60) + ',' + (BoilerBox.y  + BoilerBox.height / 2 + 15) + ')'"
+   style="cursor: pointer"
+   (click)="toggleBoilerMenu()">
+  <path 
+    d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z" 
+    fill="#30353A"
+    [attr.transform]="showBoilerMenu ? 'rotate(90, 12, 12)' : 'rotate(0, 12, 12)'"/>
+</g>
+
+<!-- Boiler DropdownMenu -->
+@if (showBoilerMenu) {
+  <g>
+    <rect [attr.x]="BoilerBox.x + BoilerBox.width + 15" 
+          [attr.y]="BoilerBox.y + 145"
+          [attr.width]="200" [attr.height]="120"
+          rx="8" ry="8"
+          fill='url(#greyRedGradient)' stroke="#4a5157" stroke-width="1"/>
+
+    <!-- Entry 1: Rated Thermal Power -->
+    <text [attr.x]="BoilerBox.x + BoilerBox.width + 20" 
+          [attr.y]="BoilerBox.y + 165"
+          fill="#000000" font-size="12"
+          style="cursor: pointer"
+          (click)="openRatedThermalPowerPopup()">
+      <tspan font-weight="bold">Rated Thermal Power:</tspan>
+      <tspan> {{ RatedThermalPower }} MW</tspan>
+      <tspan baseline-shift="sub" font-size="9"> th</tspan>
+    </text>
+
+    <!-- Divider -->
+    <line [attr.x1]="BoilerBox.x + BoilerBox.width + 20"
+          [attr.y1]="BoilerBox.y + 175"
+          [attr.x2]="BoilerBox.x + BoilerBox.width + 205"
+          [attr.y2]="BoilerBox.y + 175"
+          stroke="#2a0107" stroke-width="1"/>
+
+    <!-- Entry 2: Min. Load -->
+    <text [attr.x]="BoilerBox.x + BoilerBox.width + 20" 
+          [attr.y]="BoilerBox.y + 190"
+          fill="#000000" font-size="12"
+          style="cursor: pointer"
+          (click)="openBoilerMinLoadPopup()">
+      <tspan font-weight="bold">Min. Load:</tspan>
+      <tspan> {{ BoilerMinLoad }} MW</tspan>
+      <tspan baseline-shift="sub" font-size="9"> th</tspan>
+    </text>
+
+    <!-- Divider -->
+    <line [attr.x1]="BoilerBox.x + BoilerBox.width + 20"
+          [attr.y1]="BoilerBox.y + 198"
+          [attr.x2]="BoilerBox.x + BoilerBox.width + 205"
+          [attr.y2]="BoilerBox.y + 198"
+          stroke="#2a0107" stroke-width="1"/>
+
+    <!-- Entry 3: Efficiency -->
+    <text [attr.x]="BoilerBox.x + BoilerBox.width + 20" 
+          [attr.y]="BoilerBox.y + 212"
+          fill="#000000" font-size="12"
+          style="cursor: pointer"
+          (click)="openBoilerEfficiencyPopup()">
+      <tspan font-weight="bold">Efficiency:</tspan>
+      <tspan> {{ BoilerEfficiency }} MW</tspan>
+      <tspan baseline-shift="sub" font-size="9"> th</tspan>
+      <tspan> / MW</tspan>
+      <tspan baseline-shift="sub" font-size="9"> Hs</tspan>
+    </text>
+
+    <!-- Divider -->
+    <line [attr.x1]="BoilerBox.x + BoilerBox.width + 20"
+          [attr.y1]="BoilerBox.y + 220"
+          [attr.x2]="BoilerBox.x + BoilerBox.width + 205"
+          [attr.y2]="BoilerBox.y + 220"
+          stroke="#2a0107" stroke-width="1"/>
+
+    <!-- Entry 4: Min. Run Time -->
+    <text [attr.x]="BoilerBox.x + BoilerBox.width + 20" 
+          [attr.y]="BoilerBox.y + 235"
+          fill="#000000" font-size="12"
+          style="cursor: pointer"
+          (click)="openBoilerMinRunTimePopup()">
+      <tspan font-weight="bold">Min. Run Time:</tspan>
+      <tspan> {{ BoilerMinRunTime }} h</tspan>
+    </text>
+
+    <!-- Divider -->
+    <line [attr.x1]="BoilerBox.x + BoilerBox.width + 20"
+          [attr.y1]="BoilerBox.y + 240"
+          [attr.x2]="BoilerBox.x + BoilerBox.width + 205"
+          [attr.y2]="BoilerBox.y + 240"
+          stroke="#2a0107" stroke-width="1"/>
+
+    <!-- Entry 5: Min. Downtime -->
+    <text [attr.x]="BoilerBox.x + BoilerBox.width + 20" 
+          [attr.y]="BoilerBox.y + 255"
+          fill="#000000" font-size="12"
+          style="cursor: pointer"
+          (click)="openBoilerMinDowntimePopup()">
+      <tspan font-weight="bold">Min. Downtime:</tspan>
+      <tspan> {{ BoilerMinDowntime }} h</tspan>
+    </text>
+  </g>
+}
 
      <!-- Arrow: Large-Scale Heat Pump RIGHT to Or TOP -->
   <polyline 
@@ -219,6 +603,122 @@
         [attr.y]="ThermalStorageBox.y + ThermalStorageBox.height / 2 + 20"
         (click)="onThermalStorageClick()"
         fill= #6D2626 text-anchor="middle" font-size="17">Storage</text>
+
+  <!-- Thermal Storage DropdownButton -->
+<rect [attr.x]="ThermalStorageBox.x + ThermalStorageBox.width + 10" [attr.y]="ThermalStorageBox.y + 5" 
+      [attr.width]="110" [attr.height]="30"
+      rx="15" ry="15"
+      fill="#e25b5b" stroke="none"
+      style="cursor: pointer"
+      (click)="toggleThermalStorageMenu()"/>
+<text [attr.x]="ThermalStorageBox.x + ThermalStorageBox.width + 60" 
+      [attr.y]="ThermalStorageBox.y + 25"
+      fill="#6D2626" text-anchor="middle" font-size="15"
+      style="cursor: pointer; font-weight: bold"
+      (click)="toggleThermalStorageMenu()">Th. Storage</text>
+<g [attr.transform]="'translate(' + (ThermalStorageBox.x + ThermalStorageBox.width + 95) + ',' + (ThermalStorageBox.y + 9) + ')'"
+   style="cursor: pointer"
+   (click)="toggleThermalStorageMenu()">
+  <path 
+    d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z" 
+    fill="#6D2626"
+    [attr.transform]="showThermalStorageMenu ? 'rotate(90, 12, 12)' : 'rotate(0, 12, 12)'"/>
+</g>
+
+<!-- Thermal Storage DropdownMenu -->
+@if (showThermalStorageMenu) {
+  <g>
+    <rect [attr.x]="ThermalStorageBox.x + ThermalStorageBox.width + 15"
+          [attr.y]="ThermalStorageBox.y + 45"
+          [attr.width]="215" [attr.height]="135"
+          rx="8" ry="8"
+          fill="#e25b5b" stroke="#a03030" stroke-width="1"/>
+
+    <!-- Entry 1: Storage Capacity -->
+    <text [attr.x]="ThermalStorageBox.x + ThermalStorageBox.width + 25"
+          [attr.y]="ThermalStorageBox.y + 68"
+          fill="#000000" font-size="12"
+          style="cursor: pointer"
+          (click)="openStorageCapacityPopup()">
+      <tspan font-weight="bold">Storage Capacity:</tspan>
+      <tspan> {{ StorageCapacity }} MWh</tspan>
+      <tspan baseline-shift="sub" font-size="9"> th</tspan>
+    </text>
+
+    <!-- Divider -->
+    <line [attr.x1]="ThermalStorageBox.x + ThermalStorageBox.width + 25"
+          [attr.y1]="ThermalStorageBox.y + 76"
+          [attr.x2]="ThermalStorageBox.x + ThermalStorageBox.width + 220"
+          [attr.y2]="ThermalStorageBox.y + 76"
+          stroke="#6D2626" stroke-width="1"/>
+
+    <!-- Entry 2: Max. Charging Power -->
+    <text [attr.x]="ThermalStorageBox.x + ThermalStorageBox.width + 25"
+          [attr.y]="ThermalStorageBox.y + 93"
+          fill="#000000" font-size="12"
+          style="cursor: pointer"
+          (click)="openMaxChargingPowerPopup()">
+      <tspan font-weight="bold">Max. Charging Power:</tspan>
+      <tspan> {{ MaxChargingPower }} MW</tspan>
+      <tspan baseline-shift="sub" font-size="9"> th</tspan>
+    </text>
+
+    <!-- Divider -->
+    <line [attr.x1]="ThermalStorageBox.x + ThermalStorageBox.width + 25"
+          [attr.y1]="ThermalStorageBox.y + 101"
+          [attr.x2]="ThermalStorageBox.x + ThermalStorageBox.width + 220"
+          [attr.y2]="ThermalStorageBox.y + 101"
+          stroke="#6D2626" stroke-width="1"/>
+
+    <!-- Entry 3: Max. Discharging Power -->
+    <text [attr.x]="ThermalStorageBox.x + ThermalStorageBox.width + 25"
+          [attr.y]="ThermalStorageBox.y + 118"
+          fill="#000000" font-size="12"
+          style="cursor: pointer"
+          (click)="openMaxDischargingPowerPopup()">
+      <tspan font-weight="bold">Max. Discharging Power:</tspan>
+      <tspan> {{ MaxDischargingPower }} MW</tspan>
+      <tspan baseline-shift="sub" font-size="9"> th</tspan>
+    </text>
+
+    <!-- Divider -->
+    <line [attr.x1]="ThermalStorageBox.x + ThermalStorageBox.width + 25"
+          [attr.y1]="ThermalStorageBox.y + 126"
+          [attr.x2]="ThermalStorageBox.x + ThermalStorageBox.width + 220"
+          [attr.y2]="ThermalStorageBox.y + 126"
+          stroke="#6D2626" stroke-width="1"/>
+
+    <!-- Entry 4: Loss -->
+    <text [attr.x]="ThermalStorageBox.x + ThermalStorageBox.width + 25"
+          [attr.y]="ThermalStorageBox.y + 143"
+          fill="#000000" font-size="12"
+          style="cursor: pointer"
+          (click)="openStorageLossPopup()">
+      <tspan font-weight="bold">Loss:</tspan>
+      <tspan> {{ StorageLoss }} MWh</tspan>
+      <tspan baseline-shift="sub" font-size="9"> th</tspan>
+      <tspan> / 15 min</tspan>
+    </text>
+
+    <!-- Divider -->
+    <line [attr.x1]="ThermalStorageBox.x + ThermalStorageBox.width + 25"
+          [attr.y1]="ThermalStorageBox.y + 151"
+          [attr.x2]="ThermalStorageBox.x + ThermalStorageBox.width + 210"
+          [attr.y2]="ThermalStorageBox.y + 151"
+          stroke="#6D2626" stroke-width="1"/>
+
+    <!-- Entry 5: Initial State of Charge -->
+    <text [attr.x]="ThermalStorageBox.x + ThermalStorageBox.width + 25"
+          [attr.y]="ThermalStorageBox.y + 168"
+          fill="#000000" font-size="12"
+          style="cursor: pointer"
+          (click)="openInitialSoCPopup()">
+      <tspan font-weight="bold">Initial State of Charge:</tspan>
+      <tspan> {{ InitialSoC }} MWh</tspan>
+      <tspan baseline-shift="sub" font-size="9"> th</tspan>
+    </text>
+  </g>
+}
 
     <!-- District Heating Network -->
     <circle [attr.cx]="HeatingNetworkCircle.cx" [attr.cy]="HeatingNetworkCircle.cy" [attr.r]="HeatingNetworkCircle.r"
@@ -357,4 +857,299 @@
       </div>
     </div>
   </div> 
+}
+
+@if (showRatedElectricalPowerPopup) {
+  <div class="popup-overlay" (click)="cancelRatedElectricalPower()">
+    <div class="popup-box" (click)="$event.stopPropagation()">
+      <label>Rated Electrical Power (MW_el)</label>
+      <input 
+        type="number" 
+        [(ngModel)]="tempRatedElectricalPower"
+        (keyup.enter)="confirmRatedElectricalPower()"/>
+      <div class="popup-actions">
+        <button class="cancel" (click)="cancelRatedElectricalPower()">Cancel</button>
+        <button class="confirm" (click)="confirmRatedElectricalPower()">Confirm</button>
+      </div>
+    </div>
+  </div> 
+}
+
+@if (showMinPowerPopup) {
+  <div class="popup-overlay" (click)="cancelMinPower()">
+    <div class="popup-box" (click)="$event.stopPropagation()">
+      <label>Min. Power (MW_el)</label>
+      <input 
+        type="number" 
+        [(ngModel)]="tempMinPower"
+        (keyup.enter)="confirmMinPower()"/>
+      <div class="popup-actions">
+        <button class="cancel" (click)="cancelMinPower()">Cancel</button>
+        <button class="confirm" (click)="confirmMinPower()">Confirm</button>
+      </div>
+    </div>
+  </div> 
+}
+
+@if (showCOPPopup) {
+  <div class="popup-overlay" (click)="cancelCOP()">
+    <div class="popup-box" (click)="$event.stopPropagation()">
+      <label>COP (MW_th / MW_el)</label>
+      <input 
+        type="number" 
+        [(ngModel)]="tempCOP"
+        (keyup.enter)="confirmCOP()"/>
+      <div class="popup-actions">
+        <button class="cancel" (click)="cancelCOP()">Cancel</button>
+        <button class="confirm" (click)="confirmCOP()">Confirm</button>
+      </div>
+    </div>
+  </div> 
+}
+
+@if (showRatedThermalPowerPopup) {
+  <div class="popup-overlay" (click)="cancelRatedThermalPower()">
+    <div class="popup-box" (click)="$event.stopPropagation()">
+      <label>Rated Thermal Power (MW<sub>th</sub>)</label>
+      <input type="number" [(ngModel)]="tempRatedThermalPower" (keyup.enter)="confirmRatedThermalPower()"/>
+      <div class="popup-actions">
+        <button class="cancel" (click)="cancelRatedThermalPower()">Cancel</button>
+        <button class="confirm" (click)="confirmRatedThermalPower()">Confirm</button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showBoilerMinLoadPopup) {
+  <div class="popup-overlay" (click)="cancelBoilerMinLoad()">
+    <div class="popup-box" (click)="$event.stopPropagation()">
+      <label>Min. Load (MW<sub>th</sub>)</label>
+      <input type="number" [(ngModel)]="tempBoilerMinLoad" (keyup.enter)="confirmBoilerMinLoad()"/>
+      <div class="popup-actions">
+        <button class="cancel" (click)="cancelBoilerMinLoad()">Cancel</button>
+        <button class="confirm" (click)="confirmBoilerMinLoad()">Confirm</button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showBoilerEfficiencyPopup) {
+  <div class="popup-overlay" (click)="cancelBoilerEfficiency()">
+    <div class="popup-box" (click)="$event.stopPropagation()">
+      <label>Efficiency (MW<sub>th</sub> / MW<sub>Hs</sub>)</label>
+      <input type="number" [(ngModel)]="tempBoilerEfficiency" (keyup.enter)="confirmBoilerEfficiency()"/>
+      <div class="popup-actions">
+        <button class="cancel" (click)="cancelBoilerEfficiency()">Cancel</button>
+        <button class="confirm" (click)="confirmBoilerEfficiency()">Confirm</button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showBoilerMinRunTimePopup) {
+  <div class="popup-overlay" (click)="cancelBoilerMinRunTime()">
+    <div class="popup-box" (click)="$event.stopPropagation()">
+      <label>Minimum Run Time (h)</label>
+      <input type="number" [(ngModel)]="tempBoilerMinRunTime" (keyup.enter)="confirmBoilerMinRunTime()"/>
+      <div class="popup-actions">
+        <button class="cancel" (click)="cancelBoilerMinRunTime()">Cancel</button>
+        <button class="confirm" (click)="confirmBoilerMinRunTime()">Confirm</button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showBoilerMinDowntimePopup) {
+  <div class="popup-overlay" (click)="cancelBoilerMinDowntime()">
+    <div class="popup-box" (click)="$event.stopPropagation()">
+      <label>Minimum Downtime (h)</label>
+      <input type="number" [(ngModel)]="tempBoilerMinDowntime" (keyup.enter)="confirmBoilerMinDowntime()"/>
+      <div class="popup-actions">
+        <button class="cancel" (click)="cancelBoilerMinDowntime()">Cancel</button>
+        <button class="confirm" (click)="confirmBoilerMinDowntime()">Confirm</button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showStorageCapacityPopup) {
+  <div class="popup-overlay" (click)="cancelStorageCapacity()">
+    <div class="popup-box" (click)="$event.stopPropagation()">
+      <label>Storage Capacity (MWh<sub>th</sub>)</label>
+      <input type="number" [(ngModel)]="tempStorageCapacity" (keyup.enter)="confirmStorageCapacity()"/>
+      <div class="popup-actions">
+        <button class="cancel" (click)="cancelStorageCapacity()">Cancel</button>
+        <button class="confirm" (click)="confirmStorageCapacity()">Confirm</button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showMaxChargingPowerPopup) {
+  <div class="popup-overlay" (click)="cancelMaxChargingPower()">
+    <div class="popup-box" (click)="$event.stopPropagation()">
+      <label>Max. Charging Power (MW<sub>th</sub>)</label>
+      <input type="number" [(ngModel)]="tempMaxChargingPower" (keyup.enter)="confirmMaxChargingPower()"/>
+      <div class="popup-actions">
+        <button class="cancel" (click)="cancelMaxChargingPower()">Cancel</button>
+        <button class="confirm" (click)="confirmMaxChargingPower()">Confirm</button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showMaxDischargingPowerPopup) {
+  <div class="popup-overlay" (click)="cancelMaxDischargingPower()">
+    <div class="popup-box" (click)="$event.stopPropagation()">
+      <label>Max. Discharging Power (MW<sub>th</sub>)</label>
+      <input type="number" [(ngModel)]="tempMaxDischargingPower" (keyup.enter)="confirmMaxDischargingPower()"/>
+      <div class="popup-actions">
+        <button class="cancel" (click)="cancelMaxDischargingPower()">Cancel</button>
+        <button class="confirm" (click)="confirmMaxDischargingPower()">Confirm</button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showStorageLossPopup) {
+  <div class="popup-overlay" (click)="cancelStorageLoss()">
+    <div class="popup-box" (click)="$event.stopPropagation()">
+      <label>Loss (MWh<sub>th</sub> / 15 min)</label>
+      <input type="number" [(ngModel)]="tempStorageLoss" (keyup.enter)="confirmStorageLoss()"/>
+      <div class="popup-actions">
+        <button class="cancel" (click)="cancelStorageLoss()">Cancel</button>
+        <button class="confirm" (click)="confirmStorageLoss()">Confirm</button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showInitialSoCPopup) {
+  <div class="popup-overlay" (click)="cancelInitialSoC()">
+    <div class="popup-box" (click)="$event.stopPropagation()">
+      <label>Initial State of Charge (MWh<sub>th</sub>)</label>
+      <input type="number" [(ngModel)]="tempInitialSoC" (keyup.enter)="confirmInitialSoC()"/>
+      <div class="popup-actions">
+        <button class="cancel" (click)="cancelInitialSoC()">Cancel</button>
+        <button class="confirm" (click)="confirmInitialSoC()">Confirm</button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showCHPElectricalPowerMaxPopup) {
+  <div class="popup-overlay" (click)="cancelCHPElectricalPowerMax()">
+    <div class="popup-box" (click)="$event.stopPropagation()">
+      <label>Electrical Power max. (MW<sub>el</sub>)</label>
+      <input type="number" [(ngModel)]="tempCHPElectricalPowerMax" (keyup.enter)="confirmCHPElectricalPowerMax()"/>
+      <div class="popup-actions">
+        <button class="cancel" (click)="cancelCHPElectricalPowerMax()">Cancel</button>
+        <button class="confirm" (click)="confirmCHPElectricalPowerMax()">Confirm</button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showCHPElectricalPowerMinPopup) {
+  <div class="popup-overlay" (click)="cancelCHPElectricalPowerMin()">
+    <div class="popup-box" (click)="$event.stopPropagation()">
+      <label>Electrical Power min. (MW<sub>el</sub>)</label>
+      <input type="number" [(ngModel)]="tempCHPElectricalPowerMin" (keyup.enter)="confirmCHPElectricalPowerMin()"/>
+      <div class="popup-actions">
+        <button class="cancel" (click)="cancelCHPElectricalPowerMin()">Cancel</button>
+        <button class="confirm" (click)="confirmCHPElectricalPowerMin()">Confirm</button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showCHPThermalPowerMaxPopup) {
+  <div class="popup-overlay" (click)="cancelCHPThermalPowerMax()">
+    <div class="popup-box" (click)="$event.stopPropagation()">
+      <label>Thermal Power max. (MW<sub>th</sub>)</label>
+      <input type="number" [(ngModel)]="tempCHPThermalPowerMax" (keyup.enter)="confirmCHPThermalPowerMax()"/>
+      <div class="popup-actions">
+        <button class="cancel" (click)="cancelCHPThermalPowerMax()">Cancel</button>
+        <button class="confirm" (click)="confirmCHPThermalPowerMax()">Confirm</button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showCHPElectricalEfficiencyPopup) {
+  <div class="popup-overlay" (click)="cancelCHPElectricalEfficiency()">
+    <div class="popup-box" (click)="$event.stopPropagation()">
+      <label>Electrical Efficiency (MW<sub>el</sub> / MW<sub>Hs</sub>)</label>
+      <input type="number" [(ngModel)]="tempCHPElectricalEfficiency" (keyup.enter)="confirmCHPElectricalEfficiency()"/>
+      <div class="popup-actions">
+        <button class="cancel" (click)="cancelCHPElectricalEfficiency()">Cancel</button>
+        <button class="confirm" (click)="confirmCHPElectricalEfficiency()">Confirm</button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showCHPThermalEfficiencyPopup) {
+  <div class="popup-overlay" (click)="cancelCHPThermalEfficiency()">
+    <div class="popup-box" (click)="$event.stopPropagation()">
+      <label>Thermal Efficiency (MW<sub>th</sub> / MW<sub>Hs</sub>)</label>
+      <input type="number" [(ngModel)]="tempCHPThermalEfficiency" (keyup.enter)="confirmCHPThermalEfficiency()"/>
+      <div class="popup-actions">
+        <button class="cancel" (click)="cancelCHPThermalEfficiency()">Cancel</button>
+        <button class="confirm" (click)="confirmCHPThermalEfficiency()">Confirm</button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showCHPOverallEfficiencyPopup) {
+  <div class="popup-overlay" (click)="cancelCHPOverallEfficiency()">
+    <div class="popup-box" (click)="$event.stopPropagation()">
+      <label>Overall Efficiency</label>
+      <input type="number" [(ngModel)]="tempCHPOverallEfficiency" (keyup.enter)="confirmCHPOverallEfficiency()"/>
+      <div class="popup-actions">
+        <button class="cancel" (click)="cancelCHPOverallEfficiency()">Cancel</button>
+        <button class="confirm" (click)="confirmCHPOverallEfficiency()">Confirm</button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showCHPMinRunTimePopup) {
+  <div class="popup-overlay" (click)="cancelCHPMinRunTime()">
+    <div class="popup-box" (click)="$event.stopPropagation()">
+      <label>Minimum Run Time (Intervals)</label>
+      <input type="number" [(ngModel)]="tempCHPMinRunTime" (keyup.enter)="confirmCHPMinRunTime()"/>
+      <div class="popup-actions">
+        <button class="cancel" (click)="cancelCHPMinRunTime()">Cancel</button>
+        <button class="confirm" (click)="confirmCHPMinRunTime()">Confirm</button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showCHPMinDowntimePopup) {
+  <div class="popup-overlay" (click)="cancelCHPMinDowntime()">
+    <div class="popup-box" (click)="$event.stopPropagation()">
+      <label>Minimum Downtime (Intervals)</label>
+      <input type="number" [(ngModel)]="tempCHPMinDowntime" (keyup.enter)="confirmCHPMinDowntime()"/>
+      <div class="popup-actions">
+        <button class="cancel" (click)="cancelCHPMinDowntime()">Cancel</button>
+        <button class="confirm" (click)="confirmCHPMinDowntime()">Confirm</button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showCHPStartupCostsPopup) {
+  <div class="popup-overlay" (click)="cancelCHPStartupCosts()">
+    <div class="popup-box" (click)="$event.stopPropagation()">
+      <label>Start-up Costs (€)</label>
+      <input type="number" [(ngModel)]="tempCHPStartupCosts" (keyup.enter)="confirmCHPStartupCosts()"/>
+      <div class="popup-actions">
+        <button class="cancel" (click)="cancelCHPStartupCosts()">Cancel</button>
+        <button class="confirm" (click)="confirmCHPStartupCosts()">Confirm</button>
+      </div>
+    </div>
+  </div>
 }
