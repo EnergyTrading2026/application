@@ -74,4 +74,16 @@ public class TimeSeriesData {
         }
         this.id.setModelIdentifier(modelIdentifier);
     }
+
+    @Transient
+    public TSDSource getTSDSource() {
+        return id != null ? this.id.getTsdSource() : null;
+    }
+
+    public void setTSDSource(TSDSource tsdSource) {
+        if (this.id == null) {
+            this.id = new TimeSeriesDataId();
+        }
+        this.id.setTsdSource(tsdSource);
+    }
 }

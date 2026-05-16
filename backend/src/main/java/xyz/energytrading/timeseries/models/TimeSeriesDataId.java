@@ -12,7 +12,9 @@ public class TimeSeriesDataId implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(name = "model_identifier")
     private ModelIdentifier modelIdentifier;
-
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tsd_source")
+    private TSDSource tsdSource;
     public TimeSeriesDataId() {}
 
     public TimeSeriesDataId(OffsetDateTime timestamp, ModelIdentifier modelIdentifier) {
@@ -36,16 +38,23 @@ public class TimeSeriesDataId implements Serializable {
         this.modelIdentifier = modelIdentifier;
     }
 
+    public TSDSource getTsdSource() {
+        return tsdSource;
+    }
+
+    public void setTsdSource(TSDSource tsdSource) {
+        this.tsdSource = tsdSource;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TimeSeriesDataId that = (TimeSeriesDataId) o;
-        return Objects.equals(timestamp, that.timestamp) && modelIdentifier == that.modelIdentifier;
+        return Objects.equals(timestamp, that.timestamp) && modelIdentifier == that.modelIdentifier && tsdSource == that.tsdSource;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(timestamp, modelIdentifier);
+        return Objects.hash(timestamp, modelIdentifier, tsdSource);
     }
 }

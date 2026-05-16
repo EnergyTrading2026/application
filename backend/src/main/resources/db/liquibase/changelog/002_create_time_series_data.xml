@@ -25,11 +25,14 @@
             <column name="model_identifier" type="VARCHAR(50)">
                 <constraints nullable="false"/>
             </column>
+            <column name="tsd_source" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+           </column>
         </createTable>
         
         <addPrimaryKey
                 tableName="time_series_data"
-                columnNames="timestamp, model_identifier"
+                columnNames="timestamp, model_identifier, tsd_source"
                 constraintName="pk_time_series_data"/>
         
         <sql>SELECT create_hypertable('time_series_data', 'timestamp')</sql>

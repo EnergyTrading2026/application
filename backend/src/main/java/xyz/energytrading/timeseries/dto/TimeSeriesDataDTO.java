@@ -1,6 +1,7 @@
 package xyz.energytrading.timeseries.dto;
 
 import xyz.energytrading.timeseries.models.ModelIdentifier;
+import xyz.energytrading.timeseries.models.TSDSource;
 import xyz.energytrading.timeseries.models.Unit;
 
 import java.time.OffsetDateTime;
@@ -11,6 +12,7 @@ public class TimeSeriesDataDTO {
     private Unit unit;
     private ModelIdentifier modelIdentifier;
     private OffsetDateTime timestamp;
+    private TSDSource tsdSource;
 
     public TimeSeriesDataDTO() {}
 
@@ -51,5 +53,13 @@ public class TimeSeriesDataDTO {
 
     public void setTimestamp(OffsetDateTime timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public TSDSource getTsdSource() {
+        return tsdSource;
+    }
+
+    public void setTsdSource(TSDSource tsdSource) {
+        this.tsdSource = tsdSource;
     }
 }
