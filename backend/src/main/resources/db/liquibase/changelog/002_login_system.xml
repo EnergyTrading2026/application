@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="002-login-system-create-database" author="dralliteration">
+        <!-- Check if users table already exists to avoid errors on re-running the migration -->
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="users"/>
+            </not>
+        </preConditions>
+
+        <!-- Create users table with id, username, and password -->
+        <createTable tableName="users">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_users"/>
+            </column>
+            <column name="username" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- Add unique constraint on username -->
+        <addUniqueConstraint tableName="users" columnNames="username" constraintName="uk_users_username"/>
+
+        <!-- Create user_roles table to associate users with their roles -->
+        <createTable tableName="user_roles">
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- Add foreign key constraint to link user_roles to users -->
+        <addForeignKeyConstraint baseTableName="user_roles" baseColumnNames="user_id"
+                                 referencedTableName="users" referencedColumnNames="id"
+                                 constraintName="fk_user_roles_users"/>
+
+        <!-- Drop tables on rollback -->
+        <rollback>
+            <dropTable tableName="user_roles"/>
+            <dropTable tableName="users"/>
+        </rollback>
+    </changeSet>
+
+
+    <changeSet id="002-login-system-insert-standard-user" author="dralliteration">
+        <!-- Check if user already exists to avoid duplicate entries on re-running the migration -->
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <tableExists tableName="users"/>
+                <tableExists tableName="user_roles"/>
+                <sqlCheck expectedResult="0">SELECT COUNT(*) FROM users WHERE username = 'user'</sqlCheck>
+            </and>
+        </preConditions>
+
+        <!-- Insert standard user with username 'user' and password 'secret' (hashed) -->
+        <insert tableName="users">
+            <column name="id" valueNumeric="1000"/>
+            <column name="username" value="user"/>
+            <column name="password" value="$2b$10$CeM8t1bRcnh3bdeKHozBrOnpA8YhQagGUfCOgK/B/BBm5UvR..zFG"/>
+        </insert>
+
+        <!-- Assign USER role to the standard user -->
+        <insert tableName="user_roles">
+            <column name="user_id" valueNumeric="1000"/>
+            <column name="role" value="USER"/>
+        </insert>
+
+        <!-- Delete the user and associated roles on rollback -->
+        <rollback>
+            <delete tableName="user_roles">
+                <where>user_id = 1000</where>
+            </delete>
+            <delete tableName="users">
+                <where>id = 1000</where>
+            </delete>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="002-login-system-insert-standard-admin" author="dralliteration">
+        <!-- Check if admin user already exists to avoid duplicate entries on re-running the migration -->
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <tableExists tableName="users"/>
+                <tableExists tableName="user_roles"/>
+                <sqlCheck expectedResult="0">SELECT COUNT(*) FROM users WHERE username = 'admin'</sqlCheck>
+            </and>
+        </preConditions>
+
+        <!-- Insert admin user with username 'admin' and password 'secret' (hashed) -->
+        <insert tableName="users">
+            <column name="id" valueNumeric="1001"/>
+            <column name="username" value="admin"/>
+            <column name="password" value="$2b$10$CeM8t1bRcnh3bdeKHozBrOnpA8YhQagGUfCOgK/B/BBm5UvR..zFG"/>
+        </insert>
+
+        <!-- Assign ADMIN and USER roles to the admin user -->
+        <insert tableName="user_roles">
+            <column name="user_id" valueNumeric="1001"/>
+            <column name="role" value="ADMIN"/>
+        </insert>
+        <insert tableName="user_roles">
+            <column name="user_id" valueNumeric="1001"/>
+            <column name="role" value="USER"/>
+        </insert>
+
+        <!-- Delete the user and associated roles on rollback -->
+        <rollback>
+            <delete tableName="user_roles">
+                <where>user_id = 1001</where>
+            </delete>
+            <delete tableName="users">
+                <where>id = 1001</where>
+            </delete>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>
+
