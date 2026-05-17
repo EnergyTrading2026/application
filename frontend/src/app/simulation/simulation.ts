@@ -1,8 +1,22 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
-
+ 
+// ─── Shared geometry types ────────────────────────────────────────────────────
+interface Box  { x: number; y: number; width: number; height: number; }
+interface Circ { cx: number; cy: number; r: number; }
+interface Pt   { x: number; y: number; }
+ 
+// ─── Menu-entry descriptor ────────────────────────────────────────────────────
+export interface MenuEntry {
+  key:   string;
+  label: string;
+  unit:  string;   // e.g. "MW"  – empty string if no unit
+  sub:   string;   // subscript after unit, e.g. "el" – empty string if none
+  extra: string;   // anything after the subscript, e.g. " / MW"
+  sub2:  string;   // second subscript, e.g. "Hs"
+}
+ 
 @Component({
   selector: 'app-simulation',
   imports: [CommonModule, FormsModule],
@@ -10,283 +24,187 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './simulation.css',
 })
 export class Simulation {
-  //Powergrid begin
-  PowerGridCircle = { cx: 150, cy: 250, r: 50 };
-  //Powergrid end
-
-  //Gasgrid Begin ***********************************************************************************************************
-  GasGridCircle = { cx: 150, cy: 550, r: 50 };
-
-  showGasGridMenu = false;
-  toggleGasGridMenu() { this.showGasGridMenu = !this.showGasGridMenu; }
-
-  GasPrice: number = 35;
-  showGasPricePopup = false;
-  tempGasPrice: number = this.GasPrice;
-  openGasPricePopup() { this.tempGasPrice = this.GasPrice; this.showGasPricePopup = true; }
-  confirmGasPrice() { this.GasPrice = Number(this.tempGasPrice); this.showGasPricePopup = false; }
-  cancelGasPrice() { this.showGasPricePopup = false; }
-
-  CO2Factor: number = 0.201;
-  showCO2FactorPopup = false;
-  tempCO2Factor: number = this.GasPrice;
-  openCO2FactorPopup() { this.tempCO2Factor = this.CO2Factor; this.showCO2FactorPopup = true; }
-  confirmCO2Factor() { this.CO2Factor = Number(this.tempCO2Factor); this.showCO2FactorPopup = false; }
-  cancelCO2Factor() { this.showCO2FactorPopup = false; }
-
-  CO2Price: number = 60;
-  showCO2PricePopup = false;
-  tempCO2Price: number = this.CO2Price;
-  openCO2PricePopup() { this.tempCO2Price = this.CO2Price; this.showCO2PricePopup = true; }
-  confirmCO2Price() { this.CO2Price = Number(this.tempCO2Price); this.showCO2PricePopup = false; }
-  cancelCO2Price() { this.showCO2PricePopup = false; }
-
-  //Gasgrid End *********************************************************************************************************************
-
-
-  //HeatPump Begin *******************************************************************************************************************
-  HeatPumpOn: boolean = true;
-  HeatPumpBox = { x: 300, y: 40, width: 115, height: 185 };
-  onHeatPumpClick(): void {
-  this.HeatPumpOn = !this.HeatPumpOn;
+ 
+  // ─── Popup ────────────────────────────────────────────────────────────────
+  activePopup: { key: string; label: string } | null = null;
+  tempValue = 0;
+ 
+  openPopup(key: string, label: string) {
+    this.tempValue = this.params[key];
+    this.activePopup = { key, label };
   }
-
-  showHeatPumpMenu = false;
-  toggleHeatPumpMenu() { this.showHeatPumpMenu = !this.showHeatPumpMenu; }
-
-  RatedElectricalPower: number = 8;
-  showRatedElectricalPowerPopup = false;
-  tempRatedElectricalPower: number = this.RatedElectricalPower;
-  openRatedElectricalPowerPopup() { this.tempRatedElectricalPower = this.RatedElectricalPower; this.showRatedElectricalPowerPopup = true; }
-  confirmRatedElectricalPower() { this.RatedElectricalPower = Number(this.tempRatedElectricalPower); this.showRatedElectricalPowerPopup = false; }
-  cancelRatedElectricalPower() { this.showRatedElectricalPowerPopup = false; }
-
-  MinPower: number = 1;
-  showMinPowerPopup = false;
-  tempMinPower: number = this.MinPower;
-  openMinPowerPopup() { this.tempMinPower = this.MinPower; this.showMinPowerPopup = true; }
-  confirmMinPower() { this.MinPower = Number(this.tempMinPower); this.showMinPowerPopup = false; }
-  cancelMinPower() { this.showMinPowerPopup = false; }
-
-  COP: number = 3.5;
-  showCOPPopup = false;
-  tempCOP: number = this.GasPrice;
-  openCOPPopup() { this.tempCOP = this.COP; this.showCOPPopup = true; }
-  confirmCOP() { this.COP = Number(this.tempCOP); this.showCOPPopup = false; }
-  cancelCOP() { this.showCOPPopup = false; }
-  // HeatPump End ***********************************************************************************************************************
-
-
-  //CHP Begin ****************************************************************************************************************************
-  CHPOn: boolean = true;
-  CHPBox1 = { x: 300, y: 320, width: 115, height: 92.5 };
-  CHPBox2 = { x: 300, y: 320 + 92.5, width: 115, height: 92.5 };
-  onCHPClick(): void {
-  this.CHPOn = !this.CHPOn;
+  confirmPopup() {
+    if (this.activePopup) this.params[this.activePopup.key] = Number(this.tempValue);
+    this.activePopup = null;
   }
+  cancelPopup() { this.activePopup = null; }
+ 
+  // ─── Component parameters ───────────────────────────────────
+  params: Record<string, number> = {
+    // Gas Grid
+    GasPrice: 35,
+    CO2Factor: 0.201,
+    CO2Price: 60,
 
-  showCHPMenu = false;
-  toggleCHPMenu() { this.showCHPMenu = !this.showCHPMenu; }
+    // Heat Pump
+    RatedElectricalPower: 8,
+    MinPower: 1,
+    COP: 3.5,
 
-  CHPElectricalPowerMax: number = 6;
-  showCHPElectricalPowerMaxPopup = false;
-  tempCHPElectricalPowerMax: number = this.CHPElectricalPowerMax;
-  openCHPElectricalPowerMaxPopup() { this.tempCHPElectricalPowerMax = this.CHPElectricalPowerMax; this.showCHPElectricalPowerMaxPopup = true; }
-  confirmCHPElectricalPowerMax() { this.CHPElectricalPowerMax = Number(this.tempCHPElectricalPowerMax); this.showCHPElectricalPowerMaxPopup = false; }
-  cancelCHPElectricalPowerMax() { this.showCHPElectricalPowerMaxPopup = false; }
+    // CHP
+    CHPElectricalPowerMax: 6,
+    CHPElectricalPowerMin: 2,
+    CHPThermalPowerMax: 7,
+    CHPElectricalEfficiency: 0.4,
+    CHPThermalEfficiency: 0.48,
+    CHPOverallEfficiency: 0.88,
+    CHPMinRunTime: 8,
+    CHPMinDowntime: 8,
+    CHPStartupCosts: 600,
 
-  CHPElectricalPowerMin: number = 2;
-  showCHPElectricalPowerMinPopup = false;
-  tempCHPElectricalPowerMin: number = this.CHPElectricalPowerMin;
-  openCHPElectricalPowerMinPopup() { this.tempCHPElectricalPowerMin = this.CHPElectricalPowerMin; this.showCHPElectricalPowerMinPopup = true; }
-  confirmCHPElectricalPowerMin() { this.CHPElectricalPowerMin = Number(this.tempCHPElectricalPowerMin); this.showCHPElectricalPowerMinPopup = false; }
-  cancelCHPElectricalPowerMin() { this.showCHPElectricalPowerMinPopup = false; }
+    // Boiler
+    RatedThermalPower: 12,
+    BoilerMinLoad: 2,
+    BoilerEfficiency: 0.97,
+    BoilerMinRunTime: 1,
+    BoilerMinDowntime: 1,
 
-  CHPThermalPowerMax: number = 7;
-  showCHPThermalPowerMaxPopup = false;
-  tempCHPThermalPowerMax: number = this.CHPThermalPowerMax;
-  openCHPThermalPowerMaxPopup() { this.tempCHPThermalPowerMax = this.CHPThermalPowerMax; this.showCHPThermalPowerMaxPopup = true; }
-  confirmCHPThermalPowerMax() { this.CHPThermalPowerMax = Number(this.tempCHPThermalPowerMax); this.showCHPThermalPowerMaxPopup = false; }
-  cancelCHPThermalPowerMax() { this.showCHPThermalPowerMaxPopup = false; }
+    // Thermal Storage
+    StorageCapacity: 200,
+    MaxChargingPower: 15,
+    MaxDischargingPower: 15,
+    StorageLoss: 0.000125,
+    InitialSoC: 200,
+  };
 
-  CHPElectricalEfficiency: number = 0.4;
-  showCHPElectricalEfficiencyPopup = false;
-  tempCHPElectricalEfficiency: number = this.CHPElectricalEfficiency;
-  openCHPElectricalEfficiencyPopup() { this.tempCHPElectricalEfficiency = this.CHPElectricalEfficiency; this.showCHPElectricalEfficiencyPopup = true; }
-  confirmCHPElectricalEfficiency() { this.CHPElectricalEfficiency = Number(this.tempCHPElectricalEfficiency); this.showCHPElectricalEfficiencyPopup = false; }
-  cancelCHPElectricalEfficiency() { this.showCHPElectricalEfficiencyPopup = false; }
+  //  ─── Component Colors ─────────────────────────────────────────────────────────
+  ThermalColor = "#e05d5d"
+  ElectricityColor = "#eceded"
+  GasColor = "#898C92"
 
-  CHPThermalEfficiency: number = 0.48;
-  showCHPThermalEfficiencyPopup = false;
-  tempCHPThermalEfficiency: number = this.CHPThermalEfficiency;
-  openCHPThermalEfficiencyPopup() { this.tempCHPThermalEfficiency = this.CHPThermalEfficiency; this.showCHPThermalEfficiencyPopup = true; }
-  confirmCHPThermalEfficiency() { this.CHPThermalEfficiency = Number(this.tempCHPThermalEfficiency); this.showCHPThermalEfficiencyPopup = false; }
-  cancelCHPThermalEfficiency() { this.showCHPThermalEfficiencyPopup = false; }
-
-  CHPOverallEfficiency: number = 0.88;
-  showCHPOverallEfficiencyPopup = false;
-  tempCHPOverallEfficiency: number = this.CHPOverallEfficiency;
-  openCHPOverallEfficiencyPopup() { this.tempCHPOverallEfficiency = this.CHPOverallEfficiency; this.showCHPOverallEfficiencyPopup = true; }
-  confirmCHPOverallEfficiency() { this.CHPOverallEfficiency = Number(this.tempCHPOverallEfficiency); this.showCHPOverallEfficiencyPopup = false; }
-  cancelCHPOverallEfficiency() { this.showCHPOverallEfficiencyPopup = false; }
-
-  CHPMinRunTime: number = 8;
-  showCHPMinRunTimePopup = false;
-  tempCHPMinRunTime: number = this.CHPMinRunTime;
-  openCHPMinRunTimePopup() { this.tempCHPMinRunTime = this.CHPMinRunTime; this.showCHPMinRunTimePopup = true; }
-  confirmCHPMinRunTime() { this.CHPMinRunTime = Number(this.tempCHPMinRunTime); this.showCHPMinRunTimePopup = false; }
-  cancelCHPMinRunTime() { this.showCHPMinRunTimePopup = false; }
-
-  CHPMinDowntime: number = 8;
-  showCHPMinDowntimePopup = false;
-  tempCHPMinDowntime: number = this.CHPMinDowntime;
-  openCHPMinDowntimePopup() { this.tempCHPMinDowntime = this.CHPMinDowntime; this.showCHPMinDowntimePopup = true; }
-  confirmCHPMinDowntime() { this.CHPMinDowntime = Number(this.tempCHPMinDowntime); this.showCHPMinDowntimePopup = false; }
-  cancelCHPMinDowntime() { this.showCHPMinDowntimePopup = false; }
-
-  CHPStartupCosts: number = 600;
-  showCHPStartupCostsPopup = false;
-  tempCHPStartupCosts: number = this.CHPStartupCosts;
-  openCHPStartupCostsPopup() { this.tempCHPStartupCosts = this.CHPStartupCosts; this.showCHPStartupCostsPopup = true; }
-  confirmCHPStartupCosts() { this.CHPStartupCosts = Number(this.tempCHPStartupCosts); this.showCHPStartupCostsPopup = false; }
-  cancelCHPStartupCosts() { this.showCHPStartupCostsPopup = false; }
-
-  //CHP End *****************************************************************************************************************************
-
-
-  //Boiler Begin ************************************************************************************************************************
-  BoilerOn: boolean = true;
-  BoilerBox = { x: 300, y: 600, width: 115, height: 185 };
-  onBoilerClick(): void {
-    this.BoilerOn = !this.BoilerOn;
-  }
-
-  showBoilerMenu = false;
-  toggleBoilerMenu() { this.showBoilerMenu = !this.showBoilerMenu; }
-
-  RatedThermalPower: number = 12;
-  showRatedThermalPowerPopup = false;
-  tempRatedThermalPower: number = this.RatedThermalPower;
-  openRatedThermalPowerPopup() { this.tempRatedThermalPower = this.RatedThermalPower; this.showRatedThermalPowerPopup = true; }
-  confirmRatedThermalPower() { this.RatedThermalPower = Number(this.tempRatedThermalPower); this.showRatedThermalPowerPopup = false; }
-  cancelRatedThermalPower() { this.showRatedThermalPowerPopup = false; }
-
-  BoilerMinLoad: number = 2;
-  showBoilerMinLoadPopup = false;
-  tempBoilerMinLoad: number = this.BoilerMinLoad;
-  openBoilerMinLoadPopup() { this.tempBoilerMinLoad = this.BoilerMinLoad; this.showBoilerMinLoadPopup = true; }
-  confirmBoilerMinLoad() { this.BoilerMinLoad = Number(this.tempBoilerMinLoad); this.showBoilerMinLoadPopup = false; }
-  cancelBoilerMinLoad() { this.showBoilerMinLoadPopup = false; }
-
-  BoilerEfficiency: number = 0.97;
-  showBoilerEfficiencyPopup = false;
-  tempBoilerEfficiency: number = this.BoilerEfficiency;
-  openBoilerEfficiencyPopup() { this.tempBoilerEfficiency = this.BoilerEfficiency; this.showBoilerEfficiencyPopup = true; }
-  confirmBoilerEfficiency() { this.BoilerEfficiency = Number(this.tempBoilerEfficiency); this.showBoilerEfficiencyPopup = false; }
-  cancelBoilerEfficiency() { this.showBoilerEfficiencyPopup = false; }
-
-  BoilerMinRunTime: number = 1;
-  showBoilerMinRunTimePopup = false;
-  tempBoilerMinRunTime: number = this.BoilerMinRunTime;
-  openBoilerMinRunTimePopup() { this.tempBoilerMinRunTime = this.BoilerMinRunTime; this.showBoilerMinRunTimePopup = true; }
-  confirmBoilerMinRunTime() { this.BoilerMinRunTime = Number(this.tempBoilerMinRunTime); this.showBoilerMinRunTimePopup = false; }
-  cancelBoilerMinRunTime() { this.showBoilerMinRunTimePopup = false; }
-
-  BoilerMinDowntime: number = 1;
-  showBoilerMinDowntimePopup = false;
-  tempBoilerMinDowntime: number = this.BoilerMinDowntime;
-  openBoilerMinDowntimePopup() { this.tempBoilerMinDowntime = this.BoilerMinDowntime; this.showBoilerMinDowntimePopup = true; }
-  confirmBoilerMinDowntime() { this.BoilerMinDowntime = Number(this.tempBoilerMinDowntime); this.showBoilerMinDowntimePopup = false; }
-  cancelBoilerMinDowntime() { this.showBoilerMinDowntimePopup = false; }
-
-  //Boiler End *************************************************************************************************************************
-
-  OrCircle = { cx: 500, cy: 320 + 92.5, r: 20 };
-
-  // Thermal Storage Begin **********************************************************************************************************
-  ThermalStorageOn: boolean = true;
-  ThermalStorageBox = { x: 650, y: 180, width: 115, height: 185 };
-  onThermalStorageClick(): void {
-    this.ThermalStorageOn = !this.ThermalStorageOn;
-  }
-
+  // ─── Toggle state ─────────────────────────────────────────────────────────
+  HeatPumpOn       = true;
+  CHPOn            = true;
+  BoilerOn         = true;
+  ThermalStorageOn = true;
+ 
+  showGasGridMenu        = false;
+  showHeatPumpMenu       = false;
+  showCHPMenu            = false;
+  showBoilerMenu         = false;
   showThermalStorageMenu = false;
-  toggleThermalStorageMenu() { this.showThermalStorageMenu = !this.showThermalStorageMenu; }
-
-  StorageCapacity: number = 200;
-  showStorageCapacityPopup = false;
-  tempStorageCapacity: number = this.StorageCapacity;
-  openStorageCapacityPopup() { this.tempStorageCapacity = this.StorageCapacity; this.showStorageCapacityPopup = true; }
-  confirmStorageCapacity() { this.StorageCapacity = Number(this.tempStorageCapacity); this.showStorageCapacityPopup = false; }
-  cancelStorageCapacity() { this.showStorageCapacityPopup = false; }
-
-  MaxChargingPower: number = 15;
-  showMaxChargingPowerPopup = false;
-  tempMaxChargingPower: number = this.MaxChargingPower;
-  openMaxChargingPowerPopup() { this.tempMaxChargingPower = this.MaxChargingPower; this.showMaxChargingPowerPopup = true; }
-  confirmMaxChargingPower() { this.MaxChargingPower = Number(this.tempMaxChargingPower); this.showMaxChargingPowerPopup = false; }
-  cancelMaxChargingPower() { this.showMaxChargingPowerPopup = false; }
-
-  MaxDischargingPower: number = 15;
-  showMaxDischargingPowerPopup = false;
-  tempMaxDischargingPower: number = this.MaxDischargingPower;
-  openMaxDischargingPowerPopup() { this.tempMaxDischargingPower = this.MaxDischargingPower; this.showMaxDischargingPowerPopup = true; }
-  confirmMaxDischargingPower() { this.MaxDischargingPower = Number(this.tempMaxDischargingPower); this.showMaxDischargingPowerPopup = false; }
-  cancelMaxDischargingPower() { this.showMaxDischargingPowerPopup = false; }
-
-  StorageLoss: number = 0.000125;
-  showStorageLossPopup = false;
-  tempStorageLoss: number = this.StorageLoss;
-  openStorageLossPopup() { this.tempStorageLoss = this.StorageLoss; this.showStorageLossPopup = true; }
-  confirmStorageLoss() { this.StorageLoss = Number(this.tempStorageLoss); this.showStorageLossPopup = false; }
-  cancelStorageLoss() { this.showStorageLossPopup = false; }
-
-  InitialSoC: number = 200;
-  showInitialSoCPopup = false;
-  tempInitialSoC: number = this.InitialSoC;
-  openInitialSoCPopup() { this.tempInitialSoC = this.InitialSoC; this.showInitialSoCPopup = true; }
-  confirmInitialSoC() { this.InitialSoC = Number(this.tempInitialSoC); this.showInitialSoCPopup = false; }
-  cancelInitialSoC() { this.showInitialSoCPopup = false; }
-  // Thermal Storage End ***************************************************************************************************************
-  HeatingNetworkCircle = { cx: 650 + (115 / 2), cy: 550, r: 50 };
-  
-  ThermalLegendBox = { x: 850, y: 650, width: 115, height: 60 };
-  ElectricityLegendBox = { x: 850, y: 720, width: 115, height: 60 };
-  GasLegendBox = { x: 850, y: 790, width: 115, height: 60 };
-
-  get PowerGridCircleTop() { return { x: this.PowerGridCircle.cx, y: this.PowerGridCircle.cy - this.PowerGridCircle.r }; }
-
-  get GasGridCircleTop() { return { x: this.GasGridCircle.cx, y: this.GasGridCircle.cy - this.GasGridCircle.r }; }
-  get GasGridCircleBottom() { return { x: this.GasGridCircle.cx, y: this.GasGridCircle.cy - this.GasGridCircle.r }; }
-
-  get HeatPumpBoxLeft() { return { x: this.HeatPumpBox.x, y: this.HeatPumpBox.y + this.HeatPumpBox.height / 2 }; }
-  get HeatPumpBoxRight() { return { x: this.HeatPumpBox.x + this.HeatPumpBox.width, y: this.HeatPumpBox.y + this.HeatPumpBox.height / 2 }; }
-
-  get CHPBoxLeft() { return { x: this.CHPBox1.x, y: this.CHPBox1.y + this.CHPBox1.height}; }
-  get CHPBoxRight() { return { x: this.CHPBox1.x + this.CHPBox1.width, y: this.CHPBox1.y + this.CHPBox1.height}; }
-
-  get BoilerBoxLeft() { return { x: this.BoilerBox.x, y: this.BoilerBox.y + this.BoilerBox.height / 2 }; }
-  get BoilerBoxRight() { return { x: this.BoilerBox.x + this.BoilerBox.width, y: this.BoilerBox.y + this.BoilerBox.height / 2 }; }
-
-  get OrCircleTop() { return { x: this.OrCircle.cx, y: this.OrCircle.cy - this.OrCircle.r }; }
-  get OrCircleBottom() { return { x: this.OrCircle.cx, y: this.OrCircle.cy + this.OrCircle.r }; }
-  get OrCircleLeft() { return { x: this.OrCircle.cx - this.OrCircle.r, y: this.OrCircle.cy }; }
-  get OrCircleTopRight() { return {
-    x: this.OrCircle.cx + this.OrCircle.r * Math.cos(-45 * Math.PI / 180),
-    y: this.OrCircle.cy + this.OrCircle.r * Math.sin(-45 * Math.PI / 180)
-  }; }
-  get OrCircleBottomRight() { return {
-    x: this.OrCircle.cx + this.OrCircle.r * Math.cos(-45 * Math.PI / 180),
-    y: this.OrCircle.cy - this.OrCircle.r * Math.sin(-45 * Math.PI / 180)
-  }; }
-
-  get ThermalStorageBoxLeft() { return { x: this.ThermalStorageBox.x, y: this.ThermalStorageBox.y + this.ThermalStorageBox.height / 2 }; }
-  get ThermalStorageBoxBottom() { return { x: this.ThermalStorageBox.x + this.ThermalStorageBox.width / 2, y: this.ThermalStorageBox.y + this.ThermalStorageBox.height }; }
-
-  get HeatingNetworkCircleTop() { return { x: this.HeatingNetworkCircle.cx, y: this.HeatingNetworkCircle.cy - this.HeatingNetworkCircle.r }; }
-  get HeatingNetworkCircleTopLeft() { return {
-    x: this.HeatingNetworkCircle.cx - this.HeatingNetworkCircle.r * Math.cos(-45 * Math.PI / 180),
-    y: this.HeatingNetworkCircle.cy + this.HeatingNetworkCircle.r * Math.sin(-45 * Math.PI / 180)
-  }; }
-   
+ 
+  /** Single toggle method used by all dropdown buttons via .bind(this, key) */
+  toggleMenu(key: 'showGasGridMenu' | 'showHeatPumpMenu' | 'showCHPMenu' | 'showBoilerMenu' | 'showThermalStorageMenu') {
+    this[key] = !this[key];
+  }
+ 
+  // ─── Geometry ─────────────────────────────────────────────────────────────
+  PowerGridCircle:      Circ = { cx: 150, cy: 250, r: 50 };
+  GasGridCircle:        Circ = { cx: 150, cy: 550, r: 50 };
+  HeatPumpBox:          Box  = { x: 300, y: 40,  width: 115, height: 185 };
+  CHPBox1:              Box  = { x: 300, y: 320, width: 115, height: 92.5 };
+  CHPBox2:              Box  = { x: 300, y: 320 + 92.5, width: 115, height: 92.5 };
+  BoilerBox:            Box  = { x: 300, y: 600, width: 115, height: 185 };
+  OrCircle:             Circ = { cx: 500, cy: 320 + 92.5, r: 20 };
+  ThermalStorageBox:    Box  = { x: 650, y: 180, width: 115, height: 185 };
+  ThermalLegendBox:     Box  = { x: 850, y: 650, width: 115, height: 60 };
+  ElectricityLegendBox: Box  = { x: 850, y: 720, width: 115, height: 60 };
+  GasLegendBox:         Box  = { x: 850, y: 790, width: 115, height: 60 };
+ 
+  get HeatingNetworkCircle(): Circ {
+    return { cx: this.ThermalStorageBox.x + this.ThermalStorageBox.width / 2, cy: 550, r: 50 };
+  }
+ 
+  // ─── Geometry helpers ─────────────────────────────────────────────────────
+  /** Returns the midpoint of a named box edge */
+  edge(b: Box, side: 'left' | 'right' | 'top' | 'bottom'): Pt {
+    switch (side) {
+      case 'left':   return { x: b.x,             y: b.y + b.height / 2 };
+      case 'right':  return { x: b.x + b.width,   y: b.y + b.height / 2 };
+      case 'top':    return { x: b.x + b.width / 2, y: b.y };
+      case 'bottom': return { x: b.x + b.width / 2, y: b.y + b.height };
+    }
+  }
+ 
+  /** Returns a point on a circle's perimeter at a given angle in degrees */
+  circPt(c: Circ, angleDeg: number): Pt {
+    const rad = angleDeg * Math.PI / 180;
+    return { x: c.cx + c.r * Math.cos(rad), y: c.cy + c.r * Math.sin(rad) };
+  }
+ 
+  // Named circle points (used in template)
+  get PowerGridTop()           { return this.circPt(this.PowerGridCircle, -90); }
+  get GasGridTop()             { return this.circPt(this.GasGridCircle,   -90); }
+  get GasGridBottom()             { return this.circPt(this.GasGridCircle,   +90); }
+  get HeatPumpLeft()           { return this.edge(this.HeatPumpBox,    'left');   }
+  get HeatPumpRight()          { return this.edge(this.HeatPumpBox,    'right');  }
+  get CHPLeft()                { return { x: this.CHPBox1.x, y: this.CHPBox1.y + this.CHPBox1.height }; }
+  get CHPRight()               { return { x: this.CHPBox1.x + this.CHPBox1.width, y: this.CHPBox1.y + this.CHPBox1.height }; }
+  get BoilerLeft()             { return this.edge(this.BoilerBox, 'left');  }
+  get BoilerRight()            { return this.edge(this.BoilerBox, 'right'); }
+  get ThermalStorageLeft()     { return this.edge(this.ThermalStorageBox, 'left');   }
+  get ThermalStorageBottom()   { return this.edge(this.ThermalStorageBox, 'bottom'); }
+  get HeatingNetworkTop()      { return this.circPt(this.HeatingNetworkCircle, -90); }
+  get HeatingNetworkTopLeft()  {
+    return {
+      x: this.HeatingNetworkCircle.cx - this.HeatingNetworkCircle.r * Math.cos(45 * Math.PI / 180),
+      y: this.HeatingNetworkCircle.cy - this.HeatingNetworkCircle.r * Math.sin(45 * Math.PI / 180),
+    };
+  }
+ 
+  get OrTop()         { return this.circPt(this.OrCircle, -90); }
+  get OrBottom()      { return this.circPt(this.OrCircle,  90); }
+  get OrLeft()        { return this.circPt(this.OrCircle, 180); }
+  get OrTopRight()    { return this.circPt(this.OrCircle, -45); }
+  get OrBottomRight() { return this.circPt(this.OrCircle,  45); }
+ 
+  // ─── Menu entry definitions ───────────────────────────────────────────────
+  gasGridEntries: MenuEntry[] = [
+    { key: 'GasPrice',  label: 'Gas Price (€ / MWh Hs)',           unit: '€ / MWh', sub: 'Hs', extra: '', sub2: '' },
+    { key: 'CO2Factor', label: 'CO₂ Factor (tCO₂ / MWh Hs)',       unit: 'tCO₂ / MWh', sub: 'Hs', extra: '', sub2: '' },
+    { key: 'CO2Price',  label: 'CO₂ Price (€ / tCO₂)',             unit: '€ / tCO₂',   sub: '',   extra: '', sub2: '' },
+  ];
+ 
+  heatPumpEntries: MenuEntry[] = [
+    { key: 'RatedElectricalPower', label: 'Rated Electrical Power (MW el)', unit: 'MW', sub: 'el', extra: '', sub2: '' },
+    { key: 'MinPower',             label: 'Min. Power (MW el)',              unit: 'MW', sub: 'el', extra: '', sub2: '' },
+    { key: 'COP',                  label: 'COP (MW th / MW el)',             unit: 'MW', sub: 'th', extra: ' / MW', sub2: 'el' },
+  ];
+ 
+  chpEntries: MenuEntry[] = [
+    { key: 'CHPElectricalPowerMax',   label: 'Electrical Power max (MW el)',          unit: 'MW', sub: 'el', extra: '', sub2: '' },
+    { key: 'CHPElectricalPowerMin',   label: 'Electrical Power min (MW el)',          unit: 'MW', sub: 'el', extra: '', sub2: '' },
+    { key: 'CHPThermalPowerMax',      label: 'Thermal Power max (MW th)',             unit: 'MW', sub: 'th', extra: '', sub2: '' },
+    { key: 'CHPElectricalEfficiency', label: 'Electrical Efficiency (MW el / MW Hs)',  unit: 'MW', sub: 'el', extra: ' / MW', sub2: 'Hs' },
+    { key: 'CHPThermalEfficiency',    label: 'Thermal Efficiency (MW th / MW Hs)',     unit: 'MW', sub: 'th', extra: ' / MW', sub2: 'Hs' },
+    { key: 'CHPOverallEfficiency',    label: 'Overall Efficiency',                     unit: '',   sub: '',   extra: '', sub2: '' },
+    { key: 'CHPMinRunTime',           label: 'Min. Run Time (Intervals)',              unit: 'Intervals', sub: '', extra: '', sub2: '' },
+    { key: 'CHPMinDowntime',          label: 'Min. Downtime (Intervals)',              unit: 'Intervals', sub: '', extra: '', sub2: '' },
+    { key: 'CHPStartupCosts',         label: 'Start-up Costs (€)',                     unit: '€',  sub: '',   extra: '', sub2: '' },
+  ];
+ 
+  boilerEntries: MenuEntry[] = [
+    { key: 'RatedThermalPower', label: 'Rated Thermal Power (MW th)',      unit: 'MW', sub: 'th', extra: '', sub2: '' },
+    { key: 'BoilerMinLoad',     label: 'Min. Load (MW th)',                unit: 'MW', sub: 'th', extra: '', sub2: '' },
+    { key: 'BoilerEfficiency',  label: 'Efficiency (MW th / MW Hs)',       unit: 'MW', sub: 'th', extra: ' / MW', sub2: 'Hs' },
+    { key: 'BoilerMinRunTime',  label: 'Min. Run Time (h)',                unit: 'h',  sub: '',   extra: '', sub2: '' },
+    { key: 'BoilerMinDowntime', label: 'Min. Downtime (h)',                unit: 'h',  sub: '',   extra: '', sub2: '' },
+  ];
+ 
+  thermalStorageEntries: MenuEntry[] = [
+    { key: 'StorageCapacity',      label: 'Storage Capacity (MWh th)',          unit: 'MWh', sub: 'th', extra: '', sub2: '' },
+    { key: 'MaxChargingPower',     label: 'Max. Charging Power (MW th)',        unit: 'MW',  sub: 'th', extra: '', sub2: '' },
+    { key: 'MaxDischargingPower',  label: 'Max. Discharging Power (MW th)',     unit: 'MW',  sub: 'th', extra: '', sub2: '' },
+    { key: 'StorageLoss',          label: 'Loss (MWh th / 15 min)',             unit: 'MWh', sub: 'th', extra: ' / 15 min', sub2: '' },
+    { key: 'InitialSoC',           label: 'Initial State of Charge (MWh th)',  unit: 'MWh', sub: 'th', extra: '', sub2: '' },
+  ];
+ 
+  // ─── Helpers used in template ─────────────────────────────────────────────
+ 
+  /** Convert a Pt to the "x,y" */
+  pt(p: Pt): string { return `${p.x},${p.y}`; }
+ 
+  /** Height for a dropdown menu rect based on number of entries */
+  menuHeight(entries: MenuEntry[]): number { return entries.length * 25 + 15; }
 }
