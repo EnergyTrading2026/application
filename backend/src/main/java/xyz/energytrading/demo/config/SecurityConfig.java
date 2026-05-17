@@ -98,10 +98,6 @@ public class SecurityConfig {
                 )
                 .userDetailsService(userDetailsService);
 
-        // TODO: Delete
-        // For H2 console frame access (only in dev)
-        // http.headers(headers -> headers.frameOptions(frame -> frame.disable()));
-
         // Register JSON login filter to accept application/json login requests at /api/auth/login
         JsonUsernamePasswordAuthenticationFilter jsonFilter = new JsonUsernamePasswordAuthenticationFilter("/api/auth/login");
         jsonFilter.setAuthenticationManager(authenticationManager);
