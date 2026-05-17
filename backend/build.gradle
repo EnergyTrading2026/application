@@ -31,7 +31,8 @@ dependencies {
 	implementation "org.mapstruct:mapstruct:$mapstruct"
 	implementation "org.mapstruct:mapstruct-processor:$mapstruct"
 	implementation "org.postgresql:postgresql:$postgresql"
-	annotationProcessor "org.mapstruct:mapstruct-processor:$mapstruct"
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    annotationProcessor "org.mapstruct:mapstruct-processor:$mapstruct"
 
 	developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
