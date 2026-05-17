@@ -55,18 +55,18 @@ public class SecurityConfig {
         this.userDetailsService = userDetailsService;
     }
 
-    /*
+    /**
      * Configure the security filter chain, including CSRF, CORS, authentication, and authorization rules.
      */
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager) {
         http
                 // Configure CSRF to ignore the login endpoint and use cookies to store the CSRF token
                 .csrf(csrf -> csrf
-                        // Allow login
+                        // Allow login and logout endpoints to be called without CSRF token from the frontend
                         .ignoringRequestMatchers(request ->
                                 "POST".equalsIgnoreCase(request.getMethod())
-                                        && "/api/auth/login".equals(request.getServletPath()))
+                                        && ("/api/auth/login".equals(request.getServletPath()) || "/api/auth/logout".equals(request.getServletPath())))
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 )
                 // Configure CORS to allow requests from the frontend application, with credentials support
@@ -76,7 +76,7 @@ public class SecurityConfig {
                 // Configure Authorization
                 .authorizeHttpRequests(auth -> auth
                         // Permit public API calls
-                        .requestMatchers("/api/auth/login", "/api/public/**").permitAll()
+                        .requestMatchers("/api/auth/login", "/api/auth/logout", "/api/public/**").permitAll()
                         // Only allow admin API calls to users with ADMIN role
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         // All other API calls require authentication
