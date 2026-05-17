@@ -3,19 +3,37 @@ spring:
     compose:
       enabled: true
       file: compose.yaml
+
   server:
-    port: 8080
+    port: ${BACKEND_PORT:8080}
+
   application:
     name: demo
+
+  # JPA configuration
   jpa:
     hibernate:
       ddl-auto: validate
     show-sql: true
+
+  # Database configuration
   datasource:
-    url: jdbc:postgresql://localhost:5432/demo_database
-    username: username
-    password: password
-    driverClassName: org.postgresql.Driver
+    url: ${DATASOURCE_URL:jdbc:postgresql://localhost:5432/demo_database}
+    username: ${DATASOURCE_USERNAME:username}
+    password: ${DATASOURCE_PASSWORD:password}
+    driverClassName: ${DATASOURCE_DRIVER:org.postgresql.Driver}
+
+  # Liquibase configuration
   liquibase:
     enabled: true
     change-log: classpath:db/liquibase/master.xml
+
+# Frontend origin
+app:
+  frontend:
+    origin: ${APP_FRONTEND_ORIGIN:http://localhost:4200}
+
+# Set debug level
+logging:
+  level:
+    org.springframework.security: ${DEBUG_LEVEL:INFO}
