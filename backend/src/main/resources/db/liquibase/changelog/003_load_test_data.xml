@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+    <changeSet id="003-load-test-data" author="mtarp">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">SELECT COUNT(*) FROM time_series_data</sqlCheck>
+        </preConditions>
+        
+        <loadData
+                file="data/time_series_data.csv"
+                relativeToChangelogFile="true"
+                separator=","
+                tableName="time_series_data">
+            <column name="timestamp" type="TIMESTAMPTZ" index="0"/>
+            <column name="model_identifier" type="STRING" index="1"/>
+            <column name="value" type="NUMERIC" index="2"/>
+            <column name="unit" type="STRING" index="3"/>
+        </loadData>
+        
+        <rollback>
+            <sql>TRUNCATE TABLE time_series_data;</sql>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

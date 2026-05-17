@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+    <changeSet id="002-create-time_series_data" author="mtarp">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="time_series_data"/>
+            </not>
+        </preConditions>
+        
+        <createTable tableName="time_series_data">
+            <column name="value" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+            <column name="unit" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="timestamp" type="TIMESTAMPTZ">
+                <constraints nullable="false"/>
+            </column>
+            <column name="model_identifier" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tsd_source" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+           </column>
+        </createTable>
+        
+        <addPrimaryKey
+                tableName="time_series_data"
+                columnNames="timestamp, model_identifier, tsd_source"
+                constraintName="pk_time_series_data"/>
+        
+        <sql>SELECT create_hypertable('time_series_data', 'timestamp')</sql>
+        
+        <rollback>
+            <dropTable tableName="time_series_data"/>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>
