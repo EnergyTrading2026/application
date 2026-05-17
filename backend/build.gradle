@@ -41,7 +41,7 @@ dependencies {
 
 generateJava {
 	schemaPaths = ["${projectDir}/src/main/resources/graphql-client"]
-	packageName = 'xyz.energytrading.demo.codegen'
+	packageName = 'xyz.energytrading.codegen'
 	generateClient = true
 }
 
