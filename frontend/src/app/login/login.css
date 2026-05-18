@@ -67,7 +67,6 @@
   padding: 12px 14px;
   font-size: 1rem;
   border-radius: 8px;
-  background: var(--primary);
   color: #fff;
   border: none;
   box-shadow: 0 6px 18px rgba(220,38,38,0.12);
@@ -82,5 +81,4 @@
 /* Login-Button (Hover) */
 .login-container .btn-primary:hover {
   background: var(--primary-600);
-  transform: translateY(-1px);
 }

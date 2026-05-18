@@ -2,8 +2,8 @@
   display: flex;
   height: 100vh;
   overflow: hidden;
-  background-color: #1a1a1a;
-  color: #e5e5e5;
+  background-color: var(--bg);
+  color: var(--text);
   font-family: system-ui, -apple-system, sans-serif;
 }
 
@@ -14,6 +14,10 @@
   flex-direction: column;
   gap: 16px;
   border-right: 1px solid #2a2a2a;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
 }
 
 .sidebar-brand {
@@ -57,3 +61,106 @@
   overflow: hidden;
   padding: 24px 32px;
 }
+
+
+
+
+/* Shared button style (Default) */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+
+/* Shared button style (click) */
+.btn:active {
+  transform: translateY(1px);
+}
+
+/* Shared button style (hover) */
+.btn:hover {
+  box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+}
+
+/* Shared primary button style (Default) */
+.btn-primary {
+  background: linear-gradient(180deg, var(--primary) 0%, var(--primary-600) 100%);
+  color: white;
+  box-shadow: 0 6px 18px rgba(220,38,38,0.18);
+}
+
+/* Shared primary button style (Hover) */
+.btn-primary:hover {
+  box-shadow: 0 10px 28px rgba(220,38,38,0.22);
+}
+
+/* Shared button style for sidebar (Default) */
+.btn-ghost {
+  background: transparent;
+  color: #d4d4d4;
+  border: 1px solid rgba(255,255,255,0.04);
+  padding: 6px 10px;
+}
+
+/* Shared button style for sidebar (Hover) */
+.btn-ghost:hover { background: rgba(255,255,255,0.02); }
+
+/* Style for the sidebar user info and logout button */
+.sidebar-user {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Style for the sidebar user greeting */
+.user-greeting {
+  font-size: 13px;
+  color: var(--text);
+}
+
+/* Style for the logout button in the sidebar */
+.logout-button { width: 100%; text-align: center; }
+
+/* Hover styles for login link and logout button (Hovering) */
+.nav-item.login-link:hover,
+.logout-button:hover {
+  background-color: var(--primary-600);
+  color: var(--text);
+}
+
+/* Style for logout confirm dialog container */
+.confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* Style for logout confirm dialog */
+.confirm-dialog {
+  background: #141618;
+  color: var(--text);
+  padding: 18px;
+  border-radius: 10px;
+  width: 92%;
+  max-width: 380px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+  border: 1px solid rgba(255,255,255,0.04);
+}
+
+.confirm-title { margin: 0 0 8px; font-size: 16px; }
+.confirm-message { margin-bottom: 14px; color: #cfcfcf; }
+.confirm-actions { display:flex; gap:10px; justify-content:flex-end; }
+.confirm-actions .btn { min-width: 96px; }
+.confirm-actions .btn-ghost { background: transparent; border: 1px solid rgba(255,255,255,0.04); }
+.confirm-actions .btn-primary { padding: 10px 14px; }

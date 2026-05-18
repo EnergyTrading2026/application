@@ -12,7 +12,28 @@
         </a>
       }
     </div>
+    <div class="sidebar-user">
+      @if (user$ | async; as user) {
+        <div class="user-greeting">Hello {{ user.username }}</div>
+        <button class="btn btn-ghost logout-button" (click)="openLogoutConfirm()">Logout</button>
+      } @else {
+        <a class="nav-item login-link btn btn-ghost" [routerLink]="'/login'">Login</a>
+      }
+    </div>
   </nav>
+  <!-- Inline logout confirmation modal integrated with the app layout -->
+  @if (showLogoutConfirm) {
+    <div class="confirm-overlay">
+      <div class="confirm-dialog">
+        <h3 class="confirm-title">Confirm logout</h3>
+        <div class="confirm-message">Are you sure you want to logout?</div>
+        <div class="confirm-actions">
+          <button class="btn btn-ghost" (click)="cancelLogout()">Cancel</button>
+          <button class="btn btn-primary" (click)="confirmLogout()">Logout</button>
+        </div>
+      </div>
+    </div>
+  }
   <main class="content">
     <router-outlet />
   </main>

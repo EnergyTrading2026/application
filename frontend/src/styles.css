@@ -1,5 +1,20 @@
 @import "tailwindcss";
 
+/* Global CSS custom properties */
+:root {
+  --bg: #1a1a1a;
+  --surface: #171819;
+  --muted: #9ea6ab;
+  --text: #e5e5e5;
+  --primary: #ef4444;
+  --primary-600: #dc2626;
+  --error: #ff6b6b;
+  --radius: 10px;
+  --gap: 12px;
+  --max-card-width: 420px;
+  --shadow: 0 10px 30px rgba(0,0,0,0.6);
+}
+
 *,
 *::before,
 *::after {
@@ -9,7 +24,7 @@
 html,
 body {
   height: 100%;
-  background-color: #1a1a1a;
-  color: #e5e5e5;
+  background-color: var(--bg);
+  color: var(--text);
   font-family: system-ui, -apple-system, sans-serif;
 }

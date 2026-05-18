@@ -1,33 +1,37 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './services/auth.guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+  { path: 'login', loadComponent: () => import('./login/login').then((m) => m.Login) },
   {
     path: 'dashboard',
-    loadComponent: () =>
-      import('./dashboard/dashboard').then((m) => m.Dashboard),
+    loadComponent: () => import('./dashboard/dashboard').then((m) => m.Dashboard),
+    canActivate: [authGuard],
   },
   {
     path: 'forecasting',
     loadComponent: () =>
       import('./forecasting/forecasting').then((m) => m.Forecasting),
     data: { title: 'Forecasting' },
+    canActivate: [authGuard],
   },
   {
     path: 'comparisons',
-    loadComponent: () =>
-      import('./placeholder/placeholder').then((m) => m.Placeholder),
+    loadComponent: () => import('./placeholder/placeholder').then((m) => m.Placeholder),
     data: { title: 'Comparisons' },
+    canActivate: [authGuard],
   },
   {
     path: 'monitoring',
     loadComponent: () =>
       import('./monitoring/monitoring').then((m) => m.Monitoring),
     data: { title: 'Monitoring' },
+    canActivate: [authGuard]
   },
   {
-  path: 'simulation',
-  loadComponent: () =>
-    import('./simulation/simulation').then((m) => m.Simulation),
+    path: 'simulation',
+    loadComponent: () => import('./simulation/simulation').then((m) => m.Simulation),
+    canActivate: [authGuard],
   },
 ];
