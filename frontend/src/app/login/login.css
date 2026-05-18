@@ -1,0 +1,86 @@
+/* Style for the login container */
+.login-container {
+  width: calc(100% - 32px);
+  max-width: var(--max-card-width);
+  margin: 6vh auto;
+  padding: clamp(16px, 4vw, 28px);
+  background: var(--surface);
+  color: var(--text);
+  border-radius: var(--radius);
+  border: 1px solid rgba(255,255,255,0.04);
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  box-sizing: border-box;
+}
+
+/* Style for the heading */
+.login-container h2 {
+  margin: 0 0 6px;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/** Style for the labels */
+.login-container label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+/* Style for the Inputs */
+.login-container input,
+.login-container textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.01);
+  color: var(--text);
+  font-size: 0.95rem;
+  line-height: 1.2;
+  box-sizing: border-box;
+}
+
+/* Style for hovering over the inputs*/
+.login-container input:focus-visible,
+.login-container textarea:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(239,68,68,0.10);
+  border-color: var(--primary-600);
+}
+
+/* Style for error messages */
+.login-container .error {
+  color: var(--error);
+  margin-bottom: 8px;
+  font-size: 0.92rem;
+}
+
+/* Login-Button (Standard)*/
+.login-container .btn-primary {
+  width: 100%;
+  margin-top: 12px;
+  padding: 12px 14px;
+  font-size: 1rem;
+  border-radius: 8px;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  box-shadow: 0 6px 18px rgba(220,38,38,0.12);
+}
+
+/* Login-Button (Focus) */
+.login-container .btn-primary:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(239,68,68,0.14);
+}
+
+/* Login-Button (Hover) */
+.login-container .btn-primary:hover {
+  background: var(--primary-600);
+  transform: translateY(-1px);
+}
