@@ -7,4 +7,5 @@
     <include file="/db/liquibase/changelog/001_create_important_information.xml"/>
     <include file="/db/liquibase/changelog/002_create_time_series_data.xml"/>
     <include file="/db/liquibase/changelog/003_load_test_data.xml"/>
+    <include file="/db/liquibase/changelog/004_create_monitoring_tables.xml"/>
 </databaseChangeLog>
