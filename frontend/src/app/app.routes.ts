@@ -10,7 +10,7 @@ export const routes: Routes = [
   {
     path: 'forecasting',
     loadComponent: () =>
-      import('./placeholder/placeholder').then((m) => m.Placeholder),
+      import('./forecasting/forecasting').then((m) => m.Forecasting),
     data: { title: 'Forecasting' },
   },
   {
@@ -20,10 +20,10 @@ export const routes: Routes = [
     data: { title: 'Comparisons' },
   },
   {
-    path: 'status',
+    path: 'monitoring',
     loadComponent: () =>
-      import('./placeholder/placeholder').then((m) => m.Placeholder),
-    data: { title: 'Status' },
+      import('./monitoring/monitoring').then((m) => m.Monitoring),
+    data: { title: 'Monitoring' },
   },
   {
   path: 'simulation',

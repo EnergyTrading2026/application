@@ -1,32 +1,31 @@
 spring:
+  application:
+    name: energy-trading
   docker:
     compose:
-      enabled: true
-      file: compose.yaml
-
-  server:
-    port: ${BACKEND_PORT:8080}
-
-  application:
-    name: demo
-
-  # JPA configuration
+      enabled: false
   jpa:
     hibernate:
       ddl-auto: validate
     show-sql: true
-
-  # Database configuration
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
   datasource:
-    url: ${DATASOURCE_URL:jdbc:postgresql://localhost:5432/demo_database}
-    username: ${DATASOURCE_USERNAME:username}
-    password: ${DATASOURCE_PASSWORD:password}
-    driverClassName: ${DATASOURCE_DRIVER:org.postgresql.Driver}
-
-  # Liquibase configuration
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/energy_trading}
+    username: ${SPRING_DATASOURCE_USERNAME:energy}
+    password: ${SPRING_DATASOURCE_PASSWORD:energy123}
+    driver-class-name: ${SPRING_DATASOURCE_DRIVER-CLASS-NAME:org.postgresql.Driver}
   liquibase:
-    enabled: true
+    enabled: ${SPRING_LIQUIBASE_ENABLED:true}
     change-log: classpath:db/liquibase/master.xml
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+
 
 # Frontend origin
 app:

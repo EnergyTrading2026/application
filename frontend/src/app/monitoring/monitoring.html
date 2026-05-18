@@ -1,0 +1,252 @@
+<!-- Header -->
+<div class="mb-4">
+  <mat-toolbar>
+    <div class="flex justify-between w-full">
+      <span>Monitoring</span>
+      <div class="flex items-center gap-1">
+        <mat-icon class="text-sm! size-4! text-[#f85149]! flex! items-center!">radio_button_checked</mat-icon>
+        <span class="text-sm">Live · vor 2 Sek.</span>
+      </div>
+    </div>
+  </mat-toolbar>
+</div>
+
+<!-- Current demand and prices -->
+<div class="flex gap-6 text-sm mb-4 px-1 opacity-80">
+  <span>Heat demand: <strong>{{ system.heatDemand }} kW</strong></span>
+  <span class="opacity-30">|</span>
+  <span>Electricity: <strong>{{ system.electricityPrice }} €/MWh</strong></span>
+  <span class="opacity-30">|</span>
+  <span>Gas: <strong>{{ system.gasPrice }} €/MWh</strong></span>
+  <span class="opacity-30">|</span>
+  <span [class.text-green-400]="totalCostPerHour < 0">
+    System cost: <strong>{{ totalCostPerHour.toFixed(2) }} €/h</strong>
+  </span>
+</div>
+
+<!-- Assets -->
+<div class="grid grid-cols-3 gap-4 mb-4">
+  @for (asset of assets; track asset.id) {
+    <mat-card>
+      <div class="flex items-center justify-between w-full gap-3 px-4 pt-4 pb-2">
+        <div class="flex items-center gap-2">
+          <mat-icon>{{ asset.icon }}</mat-icon>
+          <span class="font-medium">{{ asset.name }}</span>
+        </div>
+        <mat-chip [highlighted]="asset.active" [class.bg-green-700!]="asset.active">
+          {{ asset.active ? 'Active' : 'Standby' }}
+        </mat-chip>
+      </div>
+      <mat-card-content>
+        <div class="flex items-stretch gap-4">
+          <div class="flex flex-col">
+            <div class="flex items-baseline gap-1.5">
+              <span class="text-[28px] font-medium">{{ asset.thermalOutput }}</span>
+              <span class="text-[13px] opacity-60">{{ asset.thermalOutputUnit }}</span>
+            </div>
+            <div class="text-xs opacity-50">Thermal</div>
+          </div>
+          @if (isCHP(asset)) {
+            <mat-divider vertical />
+            <div class="flex flex-col">
+              <div class="flex items-baseline gap-1.5 text-green-400">
+                <span class="text-[28px] font-medium">{{ asset.electricalOutput }}</span>
+                <span class="text-[13px] opacity-60">{{ asset.electricalOutputUnit }}</span>
+              </div>
+              <div class="text-xs opacity-50">Electrical</div>
+            </div>
+          }
+        </div>
+        <div class="flex flex-col gap-1 mt-3">
+          <div class="text-xs opacity-50">{{ asset.input }} {{ asset.inputUnit }}</div>
+          <div class="text-xs" [class.text-green-400]="netCost(asset) < 0" [class.opacity-40]="!asset.active">
+            Cost: {{ netCost(asset) >= 0 ? '+' : '' }}{{ netCost(asset).toFixed(2) }} €/h
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  }
+</div>
+
+<!-- Bottom: Storage + Sidebar -->
+<div class="flex gap-4 flex-1 min-h-0 mb-4">
+
+  <!-- Sidebar -->
+  <div class="shrink-0 flex flex-col gap-4 h-full w-4/10">
+
+    <!-- Network Supply -->
+    <mat-card class="flex-1 min-h-0 flex! flex-col!">
+      <mat-card-header>
+        <mat-card-title class="flex items-center gap-2 text-base! font-medium!">
+          <mat-icon>device_hub</mat-icon>
+          Network Supply
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content class="flex! flex-col flex-1 gap-2 overflow-hidden pt-2! pb-0!">
+        @for (asset of assets; track asset.id) {
+          @if (asset.active && asset.networkOutput > 0) {
+            <div class="flex items-center justify-between text-sm">
+              <div class="flex items-center gap-2">
+                <span class="inline-block w-2.5 h-2.5 rounded-full shrink-0"
+                      [style.background-color]="assetColor(asset)"></span>
+                <span class="opacity-80">{{ asset.name }}</span>
+              </div>
+              <span class="font-medium">{{ asset.networkOutput }} kW</span>
+            </div>
+          }
+        }
+        @if (storage.discharge > 0) {
+          <div class="flex items-center justify-between text-sm">
+            <div class="flex items-center gap-2">
+              <span class="inline-block w-2.5 h-2.5 rounded-full bg-green-600 shrink-0"></span>
+              <span class="opacity-80">Heat Storage</span>
+            </div>
+            <span class="font-medium">{{ storage.discharge }} kW</span>
+          </div>
+        }
+      </mat-card-content>
+      <mat-divider />
+      <mat-card-footer>
+        <div class="flex justify-between w-full px-4 py-3 text-sm font-semibold">
+          <span>Total</span>
+          <span [class.text-green-400]="networkSupply + storage.discharge >= system.heatDemand"
+                [class.text-red-400]="networkSupply + storage.discharge < system.heatDemand">
+            {{ networkSupply + storage.discharge }} / {{ system.heatDemand }} kW
+          </span>
+        </div>
+      </mat-card-footer>
+    </mat-card>
+
+    <!-- Storage Flow -->
+    @if (storage.charging > 0 || storage.discharge > 0) {
+      <mat-card class="flex-1 min-h-0 flex! flex-col!">
+        <mat-card-header>
+          <mat-card-title class="flex items-center gap-2 text-base! font-medium!">
+            <mat-icon>swap_vert</mat-icon>
+            Storage Flow
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="flex! flex-col flex-1 gap-2 overflow-hidden pt-2! pb-0!">
+          @if (storage.charging > 0) {
+            @for (asset of assets; track asset.id) {
+              @if (storageCharging(asset) > 0) {
+                <div class="flex items-center justify-between text-sm">
+                  <div class="flex items-center gap-2 opacity-80">
+                    <mat-icon class="text-blue-400 text-base! size-5!">arrow_downward</mat-icon>
+                    <span>{{ asset.name }}</span>
+                  </div>
+                  <span class="font-medium text-blue-400">{{ storageCharging(asset) }} kW</span>
+                </div>
+              }
+            }
+          }
+          @if (storage.discharge > 0) {
+            <div class="flex items-center justify-between text-sm">
+              <div class="flex items-center gap-2 opacity-80">
+                <mat-icon class="text-green-400 text-base! size-5!">arrow_upward</mat-icon>
+                <span>Heat Storage</span>
+              </div>
+              <span class="font-medium text-green-400">{{ storage.discharge }} kW</span>
+            </div>
+          }
+        </mat-card-content>
+        <mat-divider />
+        <mat-card-footer>
+          <div class="flex justify-between w-full px-4 py-3 text-sm font-semibold">
+            <span>Net balance</span>
+            <span [class.text-blue-400]="storage.charging > storage.discharge"
+                  [class.text-green-400]="storage.discharge > storage.charging">
+              {{ storage.netBalance }}
+            </span>
+          </div>
+        </mat-card-footer>
+      </mat-card>
+    }
+
+    <!-- System Costs -->
+    <mat-card class="flex-1 min-h-0 flex! flex-col!">
+      <mat-card-header>
+        <mat-card-title class="flex items-center gap-2 text-base! font-medium!">
+          <mat-icon>payments</mat-icon>
+          System Costs
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content class="flex! flex-col flex-1 gap-2 overflow-hidden pt-2! pb-0!">
+        @for (asset of assets; track asset.id) {
+          @if (asset.active) {
+            @if (isCHP(asset)) {
+              <div class="flex items-center justify-between text-sm">
+                <span class="opacity-80">{{ asset.name }} input cost</span>
+                <span class="font-medium">+{{ asset.inputCost.toFixed(2) }} €/h</span>
+              </div>
+              <div class="flex items-center justify-between text-sm">
+                <span class="opacity-80">{{ asset.name }} electrical revenue</span>
+                <span class="font-medium text-green-400">-{{ asset.electricalOutputRevenue.toFixed(2) }} €/h</span>
+              </div>
+            } @else {
+              <div class="flex items-center justify-between text-sm">
+                <span class="opacity-80">{{ asset.name }}</span>
+                <span class="font-medium" [class.text-green-400]="netCost(asset) < 0">
+                  {{ netCost(asset) >= 0 ? '+' : '' }}{{ netCost(asset).toFixed(2) }} €/h
+                </span>
+              </div>
+            }
+          }
+        }
+      </mat-card-content>
+      <mat-divider />
+      <mat-card-footer>
+        <div class="flex justify-between w-full px-4 py-3 text-sm font-semibold">
+          <span>Total</span>
+          <span [class.text-green-400]="totalCostPerHour < 0">
+            {{ totalCostPerHour >= 0 ? '+' : '' }}{{ totalCostPerHour.toFixed(2) }} €/h
+          </span>
+        </div>
+      </mat-card-footer>
+    </mat-card>
+  </div>
+
+  <!-- Storage -->
+  <mat-card class="flex-1 min-h-0 w-6/10">
+    <mat-card-header>
+      <mat-icon mat-card-avatar>propane_tank</mat-icon>
+      <mat-card-title>{{ storage.title }}</mat-card-title>
+      <span class="flex-1"></span>
+      <div class="flex flex-col items-end">
+        <strong class="text-[22px]">{{ storage.percent }} %</strong>
+        <small>{{ storage.capacity * storage.percent / 100 }} kWh available</small>
+      </div>
+    </mat-card-header>
+    <mat-card-content class="h-full">
+      <div class="flex flex-row gap-6 py-4 h-full">
+        <div class="w-4/5 flex flex-col gap-3">
+          @for (m of storage.metrics; track m.label) {
+            <mat-card appearance="outlined">
+              <mat-card-content>
+                <div class="flex flex-col gap-1">
+                  <p class="font-medium opacity-60 text-sm">{{ m.label }}</p>
+                  <p class="font-bold text-lg">{{ m.value }}</p>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          }
+        </div>
+        <div class="w-1/5 flex items-center justify-center">
+          <div class="w-7/8 h-full border-[3px] border-[#888] rounded-2xl relative overflow-hidden bg-black/10">
+            <div class="bg-green-700 absolute bottom-0 left-0 right-0 transition-[height] duration-800 opacity-90 rounded-b-[13px]"
+                 [style.height.%]="storage.percent">
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+    <mat-divider />
+    <mat-card-footer>
+      <div class="flex justify-between px-4 py-3 text-xs opacity-70">
+        <span>Net balance: <strong>{{ storage.netBalance }}</strong></span>
+        <span>Range at current load: <strong>{{ storage.range }}</strong></span>
+      </div>
+    </mat-card-footer>
+  </mat-card>
+
+</div>
