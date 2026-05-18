@@ -1,4 +1,4 @@
-package xyz.energytrading.demo.security;
+package xyz.energytrading.security.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
@@ -56,7 +56,7 @@ public class JsonUsernamePasswordAuthenticationFilter extends AbstractAuthentica
     }
 
     @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws ServletException {
         try {
             this.getFailureHandler().onAuthenticationFailure(request, response, failed);
         } catch (Exception e) {

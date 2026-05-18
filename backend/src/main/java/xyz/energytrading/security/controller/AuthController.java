@@ -1,4 +1,4 @@
-package xyz.energytrading.demo.controller;
+package xyz.energytrading.security.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;

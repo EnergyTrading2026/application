@@ -6,7 +6,7 @@
         http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
 
-    <changeSet id="002-login-system-create-database" author="dralliteration">
+    <changeSet id="004-login-system-create-database" author="dralliteration">
         <!-- Check if users table already exists to avoid errors on re-running the migration -->
         <preConditions onFail="MARK_RAN">
             <not>
@@ -53,7 +53,7 @@
     </changeSet>
 
 
-    <changeSet id="002-login-system-insert-standard-user" author="dralliteration">
+    <changeSet id="004-login-system-insert-standard-user" author="dralliteration">
         <!-- Check if user already exists to avoid duplicate entries on re-running the migration -->
         <preConditions onFail="MARK_RAN">
             <and>
@@ -87,7 +87,7 @@
         </rollback>
     </changeSet>
 
-    <changeSet id="002-login-system-insert-standard-admin" author="dralliteration">
+    <changeSet id="004-login-system-insert-standard-admin" author="dralliteration">
         <!-- Check if admin user already exists to avoid duplicate entries on re-running the migration -->
         <preConditions onFail="MARK_RAN">
             <and>

@@ -1,4 +1,4 @@
-package xyz.energytrading.demo.services;
+package xyz.energytrading.security.services;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -7,8 +7,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import xyz.energytrading.demo.models.UserEntity;
-import xyz.energytrading.demo.repository.UserRepository;
+import xyz.energytrading.security.models.UserEntity;
+import xyz.energytrading.security.repository.UserRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;

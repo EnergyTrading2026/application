@@ -1,4 +1,4 @@
-package xyz.energytrading.demo.config;
+package xyz.energytrading.security.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,8 +29,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
-import xyz.energytrading.demo.security.JsonUsernamePasswordAuthenticationFilter;
-import xyz.energytrading.demo.services.CustomUserDetailsService;
+import xyz.energytrading.security.security.JsonUsernamePasswordAuthenticationFilter;
+import xyz.energytrading.security.services.CustomUserDetailsService;
 
 import java.util.List;
 import java.util.Map;

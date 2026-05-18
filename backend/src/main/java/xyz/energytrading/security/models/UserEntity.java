@@ -1,4 +1,4 @@
-package xyz.energytrading.demo.models;
+package xyz.energytrading.security.models;
 
 import jakarta.persistence.*;
 import java.util.HashSet;

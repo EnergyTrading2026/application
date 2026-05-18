@@ -1,8 +1,8 @@
-package xyz.energytrading.demo.repository;
+package xyz.energytrading.security.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import xyz.energytrading.demo.models.UserEntity;
+import xyz.energytrading.security.models.UserEntity;
 
 import java.util.Optional;
 
