@@ -1,0 +1,332 @@
+<!-- TopBar -->
+<div class="page-header">
+  <span class="topBar">Simulation / Setting Parameters</span>
+</div>
+ 
+<svg width="1000" height="900" xmlns="http://www.w3.org/2000/svg">
+ 
+  <defs>
+    <marker id="whiteArrow" markerWidth="8" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" [attr.fill] = ElectricityColor/>
+    </marker>
+
+    <marker id="greyArrow" markerWidth="8" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" [attr.fill] = GasColor/>
+    </marker>
+
+    <marker id="redArrow" markerWidth="8" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" [attr.fill] = ThermalColor/>
+    </marker>
+
+    <linearGradient id="whiteToRedGradient" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%"   [style.stop-color]="ElectricityColor"/>
+      <stop offset="50%"  stop-color="#e6a6a6"/>
+      <stop offset="100%" [style.stop-color]="ThermalColor"/>
+    </linearGradient>
+
+    <linearGradient id="greyWhiteGradient" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%"   [style.stop-color]="GasColor"/>
+      <stop offset="50%"  stop-color="#a9adb0"/>
+      <stop offset="100%" [style.stop-color]="ElectricityColor"/>
+    </linearGradient>
+
+    <linearGradient id="greyRedGradient" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%"   [style.stop-color]="GasColor"/>
+      <stop offset="50%"  stop-color="#B47477"/>
+      <stop offset="100%" [style.stop-color]="ThermalColor"/>
+    </linearGradient>
+  </defs>
+ 
+  <!-- ═══ POWER GRID ══════════════════════════════════════════════════════════ -->
+  <circle [attr.cx]="PowerGridCircle.cx" [attr.cy]="PowerGridCircle.cy" [attr.r]="PowerGridCircle.r"
+          [attr.fill] = ElectricityColor stroke="white" stroke-width="1.5"/>
+  <text [attr.x]="PowerGridCircle.cx" [attr.y]="PowerGridCircle.cy + 5"
+        fill="#613B3C" text-anchor="middle" font-size="17">Power Grid</text>
+ 
+  <!-- ═══ GAS GRID ════════════════════════════════════════════════════════════ -->
+  <circle [attr.cx]="GasGridCircle.cx" [attr.cy]="GasGridCircle.cy" [attr.r]="GasGridCircle.r"
+          [attr.fill] = GasColor stroke="#6e757d" stroke-width="1.5"/>
+  <text [attr.x]="GasGridCircle.cx" [attr.y]="GasGridCircle.cy + 5"
+        fill="#30353A" text-anchor="middle" font-size="17">Gas Grid</text>
+ 
+  <!-- Gas Grid dropdown button -->
+  <ng-container *ngTemplateOutlet="dropdownBtn; context:{
+    x: GasGridCircle.cx - GasGridCircle.r - 80,
+    y: GasGridCircle.cy + GasGridCircle.r,
+    w: 90, label: 'Gas Grid', fill: GasColor, textFill: '#30353A',
+    open: showGasGridMenu, toggleFn: toggleMenu.bind(this, 'showGasGridMenu')
+  }"/>
+ 
+  <!-- Gas Grid dropdown menu -->
+  @if (showGasGridMenu) {
+    <ng-container *ngTemplateOutlet="dropdownMenu; context:{
+      entries: gasGridEntries,
+      x: GasGridCircle.cx - GasGridCircle.r - 80,
+      y: GasGridCircle.cy + GasGridCircle.r + 33,
+      w: 190, fill: GasColor, dividerFill: '#4a5157', textFill: '#ffffff'
+    }"/>
+  }
+ 
+  <!-- Arrow Power Grid to Heat Pump -->
+  <polyline
+    [attr.points]="pt(PowerGridTop)+' '+PowerGridTop.x+','+HeatPumpLeft.y+' '+pt(HeatPumpLeft)"
+    fill="none" [attr.stroke]= ElectricityColor stroke-width="1.5" marker-end="url(#whiteArrow)"/>
+  <!-- Arrow Gas Grid to CHP -->
+  <polyline
+    [attr.points]="pt(GasGridTop)+' '+GasGridTop.x+','+CHPLeft.y+' '+pt(CHPLeft)"
+    fill="none" [attr.stroke]= GasColor stroke-width="1.5" marker-end="url(#greyArrow)"/>
+  <!-- Arrow Gas Grid to Boiler -->
+  <polyline
+    [attr.points]="pt(GasGridBottom)+' '+GasGridBottom.x+','+BoilerLeft.y+' '+pt(BoilerLeft)"
+    fill="none" [attr.stroke]= GasColor stroke-width="1.5" marker-end="url(#greyArrow)"/>
+ 
+  <!-- ═══ HEAT PUMP ════════════════════════════════════════════════════════════ -->
+  <rect [attr.x]="HeatPumpBox.x" [attr.y]="HeatPumpBox.y"
+        [attr.width]="HeatPumpBox.width" [attr.height]="HeatPumpBox.height"
+        rx="15" ry="15"
+        [attr.fill]="HeatPumpOn ? 'url(#whiteToRedGradient)' : '#A8ABCD'"
+        stroke="none" style="cursor:pointer" (click)="HeatPumpOn = !HeatPumpOn"/>
+  <text [attr.x]="HeatPumpBox.x + HeatPumpBox.width/2" [attr.y]="HeatPumpBox.y + HeatPumpBox.height/2"
+        fill="#613B3C" text-anchor="middle" font-size="17" style="pointer-events:none">Large-Scale</text>
+  <text [attr.x]="HeatPumpBox.x + HeatPumpBox.width/2" [attr.y]="HeatPumpBox.y + HeatPumpBox.height/2 + 20"
+        fill="#613B3C" text-anchor="middle" font-size="17" style="pointer-events:none">Heat Pump</text>
+ 
+  <!-- Heat Pump – dropdown button -->
+  <ng-container *ngTemplateOutlet="dropdownBtn; context:{
+    x: HeatPumpBox.x - HeatPumpBox.width,
+    y: HeatPumpBox.y + 5,
+    w: 105, label: 'Heat Pump', fill: 'url(#whiteToRedGradient)', textFill: '#30353A',
+    open: showHeatPumpMenu, toggleFn: toggleMenu.bind(this, 'showHeatPumpMenu')
+  }"/>
+ 
+  <!-- Heat Pump – dropdown menu -->
+  @if (showHeatPumpMenu) {
+    <ng-container *ngTemplateOutlet="dropdownMenu; context:{
+      entries: heatPumpEntries,
+      x: HeatPumpBox.x - HeatPumpBox.width * 2 + 30,
+      y: HeatPumpBox.y + 40,
+      w: 190, fill: 'url(#whiteToRedGradient)', dividerFill: '#2a0107', textFill: '#000000'
+    }"/>
+  }
+ 
+  <!-- ═══ CHP ══════════════════════════════════════════════════════════════════ -->
+  <rect [attr.x]="CHPBox1.x" [attr.y]="CHPBox1.y"
+        [attr.width]="CHPBox1.width" [attr.height]="CHPBox1.height"
+        [attr.fill]="CHPOn ? 'url(#greyWhiteGradient)' : '#A8ABCD'"
+        stroke="none" style="cursor:pointer" (click)="CHPOn = !CHPOn"/>
+  <rect [attr.x]="CHPBox2.x" [attr.y]="CHPBox2.y"
+        [attr.width]="CHPBox2.width" [attr.height]="CHPBox2.height"
+        [attr.fill]="CHPOn ? 'url(#greyRedGradient)' : '#A8ABCD'"
+        stroke="none" style="cursor:pointer" (click)="CHPOn = !CHPOn"/>
+  <text [attr.x]="CHPBox1.x + CHPBox1.width/2" [attr.y]="CHPBox1.y + CHPBox1.height + 5"
+        fill="#443A3E" text-anchor="middle" font-size="17" style="pointer-events:none">CHP</text>
+ 
+  <!-- CHP – dropdown button -->
+  <ng-container *ngTemplateOutlet="dropdownBtn; context:{
+    x: CHPBox1.x - CHPBox1.width + 10,
+    y: CHPBox1.y + 5,
+    w: 70, label: 'CHP', fill: 'url(#greyWhiteGradient)', textFill: '#30353A',
+    open: showCHPMenu, toggleFn: toggleMenu.bind(this, 'showCHPMenu')
+  }"/>
+ 
+  <!-- CHP – dropdown menu -->
+  @if (showCHPMenu) {
+    <ng-container *ngTemplateOutlet="dropdownMenu; context:{
+      entries: chpEntries,
+      x: CHPBox1.x - CHPBox1.width * 2 - 35,
+      y: CHPBox1.y + 40,
+      w: 230, fill: 'url(#greyWhiteGradient)', dividerFill: '#2a0107', textFill: '#000000'
+    }"/>
+  }
+ 
+  <!-- ═══ BOILER ════════════════════════════════════════════════════════════════ -->
+  <rect [attr.x]="BoilerBox.x" [attr.y]="BoilerBox.y"
+        [attr.width]="BoilerBox.width" [attr.height]="BoilerBox.height"
+        rx="15" ry="15"
+        [attr.fill]="BoilerOn ? 'url(#greyRedGradient)' : '#A8ABCD'"
+        stroke="none" style="cursor:pointer" (click)="BoilerOn = !BoilerOn"/>
+  <text [attr.x]="BoilerBox.x + BoilerBox.width/2" [attr.y]="BoilerBox.y + BoilerBox.height/2"
+        fill="#542D2E" text-anchor="middle" font-size="17" style="pointer-events:none">Condensing</text>
+  <text [attr.x]="BoilerBox.x + BoilerBox.width/2" [attr.y]="BoilerBox.y + BoilerBox.height/2 + 20"
+        fill="#542D2E" text-anchor="middle" font-size="17" style="pointer-events:none">Boiler</text>
+ 
+  <!-- Boiler – dropdown button -->
+  <ng-container *ngTemplateOutlet="dropdownBtn; context:{
+    x: BoilerBox.x + BoilerBox.width + 10,
+    y: BoilerBox.y + BoilerBox.height/2 + 10,
+    w: 75, label: 'Boiler', fill: 'url(#greyRedGradient)', textFill: '#30353A',
+    open: showBoilerMenu, toggleFn: toggleMenu.bind(this, 'showBoilerMenu')
+  }"/>
+ 
+  <!-- Boiler – dropdown menu -->
+  @if (showBoilerMenu) {
+    <ng-container *ngTemplateOutlet="dropdownMenu; context:{
+      entries: boilerEntries,
+      x: BoilerBox.x + BoilerBox.width + 10,
+      y: BoilerBox.y + 136,
+      w: 200, fill: 'url(#greyRedGradient)', dividerFill: '#2a0107', textFill: '#000000'
+    }"/>
+  }
+ 
+  <!-- Arrow Heat Pump to OR -->
+  <polyline
+    [attr.points]="pt(HeatPumpRight)+' '+OrTop.x+','+HeatPumpRight.y+' '+pt(OrTop)"
+    fill="none" [attr.stroke]= ThermalColor stroke-width="1.5" marker-end="url(#redArrow)"/>
+  <!-- Arrow CHP to OR -->
+  <line [attr.x1]="CHPRight.x" [attr.y1]="CHPRight.y" [attr.x2]="OrLeft.x" [attr.y2]="OrLeft.y"
+        [attr.stroke]= ThermalColor stroke-width="1.5" marker-end="url(#redArrow)"/>
+  <!-- Arrow Boiler to OR -->
+  <polyline
+    [attr.points]="pt(BoilerRight)+' '+OrBottom.x+','+BoilerRight.y+' '+pt(OrBottom)"
+    fill="none" [attr.stroke]= ThermalColor stroke-width="1.5" marker-end="url(#redArrow)"/>
+ 
+  <!-- ═══ OR NODE ═══════════════════════════════════════════════════════════════ -->
+  <circle [attr.cx]="OrCircle.cx" [attr.cy]="OrCircle.cy" [attr.r]="OrCircle.r"
+          fill="white" stroke="white" stroke-width="1.5"/>
+  <text [attr.x]="OrCircle.cx" [attr.y]="OrCircle.cy + 5"
+        fill="#000000" text-anchor="middle" font-size="17">OR</text>
+ 
+  <!-- Arrow OR to Thermal Storage -->
+  <line [attr.x1]="OrTopRight.x"    [attr.y1]="OrTopRight.y"
+        [attr.x2]="ThermalStorageLeft.x" [attr.y2]="ThermalStorageLeft.y"
+        [attr.stroke]= ThermalColor stroke-width="1.5" marker-end="url(#redArrow)"/>
+  <!-- Arrow OR to Heating Network -->
+  <line [attr.x1]="OrBottomRight.x"        [attr.y1]="OrBottomRight.y"
+        [attr.x2]="HeatingNetworkTopLeft.x" [attr.y2]="HeatingNetworkTopLeft.y"
+        [attr.stroke]= ThermalColor stroke-width="1.5" marker-end="url(#redArrow)"/>
+ 
+  <!-- ═══ THERMAL STORAGE ═══════════════════════════════════════════════════════ -->
+  <rect [attr.x]="ThermalStorageBox.x" [attr.y]="ThermalStorageBox.y"
+        [attr.width]="ThermalStorageBox.width" [attr.height]="ThermalStorageBox.height"
+        rx="15" ry="15"
+        [attr.fill]="ThermalStorageOn ? ThermalColor : '#A8ABCD'"
+        stroke="none" style="cursor:pointer" (click)="ThermalStorageOn = !ThermalStorageOn"/>
+  <text [attr.x]="ThermalStorageBox.x + ThermalStorageBox.width/2"
+        [attr.y]="ThermalStorageBox.y + ThermalStorageBox.height/2"
+        fill="#6D2626" text-anchor="middle" font-size="17" style="pointer-events:none">Thermal</text>
+  <text [attr.x]="ThermalStorageBox.x + ThermalStorageBox.width/2"
+        [attr.y]="ThermalStorageBox.y + ThermalStorageBox.height/2 + 20"
+        fill="#6D2626" text-anchor="middle" font-size="17" style="pointer-events:none">Storage</text>
+ 
+  <!-- Thermal Storage – dropdown button -->
+  <ng-container *ngTemplateOutlet="dropdownBtn; context:{
+    x: ThermalStorageBox.x + ThermalStorageBox.width + 10,
+    y: ThermalStorageBox.y + 5,
+    w: 110, label: 'Th. Storage', fill: ThermalColor, textFill: '#6D2626',
+    open: showThermalStorageMenu, toggleFn: toggleMenu.bind(this, 'showThermalStorageMenu')
+  }"/>
+ 
+  <!-- Thermal Storage – dropdown menu -->
+  @if (showThermalStorageMenu) {
+    <ng-container *ngTemplateOutlet="dropdownMenu; context:{
+      entries: thermalStorageEntries,
+      x: ThermalStorageBox.x + ThermalStorageBox.width + 10,
+      y: ThermalStorageBox.y + 40,
+      w: 215, fill: ThermalColor, dividerFill: '#6D2626', textFill: '#000000'
+    }"/>
+  }
+ 
+  <!-- Arrow Thermal Storage to District Heating Network -->
+  <line [attr.x1]="ThermalStorageBottom.x" [attr.y1]="ThermalStorageBottom.y"
+        [attr.x2]="HeatingNetworkTop.x"    [attr.y2]="HeatingNetworkTop.y"
+        [attr.stroke]= ThermalColor stroke-width="1.5" marker-end="url(#redArrow)"/>
+ 
+  <!-- ═══ DISTRICT HEATING NETWORK ════════════════════════════════════════════ -->
+  <circle [attr.cx]="HeatingNetworkCircle.cx" [attr.cy]="HeatingNetworkCircle.cy"
+          [attr.r]="HeatingNetworkCircle.r" [attr.fill]= ThermalColor stroke="#e05d5d" stroke-width="1.5"/>
+  <text [attr.x]="HeatingNetworkCircle.cx" [attr.y]="HeatingNetworkCircle.cy - 10"
+        fill="#6D2626" text-anchor="middle" font-size="17">District</text>
+  <text [attr.x]="HeatingNetworkCircle.cx" [attr.y]="HeatingNetworkCircle.cy + 5"
+        fill="#6D2626" text-anchor="middle" font-size="17">Heating</text>
+  <text [attr.x]="HeatingNetworkCircle.cx" [attr.y]="HeatingNetworkCircle.cy + 20"
+        fill="#6D2626" text-anchor="middle" font-size="17">Network</text>
+ 
+  <!-- ═══ LEGEND ════════════════════════════════════════════════════════════════ -->
+  @for (item of [
+    { box: ThermalLegendBox,     fill: ThermalColor, textFill: '#6F2627', label: 'Thermal'     },
+    { box: ElectricityLegendBox, fill: ElectricityColor, textFill: '#545455', label: 'Electricity' },
+    { box: GasLegendBox,         fill: GasColor, textFill: '#2D3137', label: 'Gas'         }
+  ]; track item.label) {
+    <rect [attr.x]="item.box.x" [attr.y]="item.box.y"
+          [attr.width]="item.box.width" [attr.height]="item.box.height"
+          rx="15" ry="15" [attr.fill]="item.fill" stroke="none"/>
+    <text [attr.x]="item.box.x + item.box.width/2"
+          [attr.y]="item.box.y + item.box.height/2 + 5"
+          [attr.fill]="item.textFill" text-anchor="middle" font-size="17">{{ item.label }}</text>
+  }
+ 
+  <!-- ═══ REUSABLE TEMPLATES ════════════════════════════════════════════════════ -->
+ 
+  <!--
+    dropdownBtn template
+    @param x: x-Coordinate in the site 
+    @param y: y-Coordinate in the site
+    @param w: width
+    @param label: Buttonname
+    @param fill: Backgroundcolor
+    @param textFIll: Textcolor
+    @param open: boolean, if relevant menu is open or closed
+    @param toggleFN: Function, that decides which menu to open
+  -->
+  <ng-template #dropdownBtn let-x="x" let-y="y" let-w="w" let-label="label"
+               let-fill="fill" let-textFill="textFill" let-open="open" let-toggleFn="toggleFn">
+    <rect [attr.x]="x" [attr.y]="y" [attr.width]="w" [attr.height]="30"
+          rx="15" ry="15" [attr.fill]="fill" stroke="none"
+          style="cursor:pointer" (click)="toggleFn()"/>
+    <text [attr.x]="x + w/2 - 5" [attr.y]="y + 20"
+          [attr.fill]="textFill" text-anchor="middle" font-size="15" font-weight="bold"
+          style="cursor:pointer" (click)="toggleFn()">{{ label }}</text>
+    <path [attr.d]="'M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z'"
+          [attr.fill]="textFill"
+          [attr.transform]="'translate('+(x+w-23)+','+(y+4)+') '+(open ? 'rotate(90,12,12)' : '')"
+          style="cursor:pointer" (click)="toggleFn()"/>
+  </ng-template>
+ 
+  <!--
+    dropdownMenu template – renders a background rect + one row per MenuEntry
+    @param x: x-Coordinate in the site 
+    @param y: y-Coordinate in the site
+    @param w: width
+    @param fill: Backgroundcolor
+    @param textFIll: Textcolor
+    @param dividerFill: dividerColor 
+  -->
+  <ng-template #dropdownMenu let-entries="entries" let-x="x" let-y="y" let-w="w"
+               let-fill="fill" let-dividerFill="dividerFill" let-textFill="textFill">
+    <rect [attr.x]="x" [attr.y]="y" [attr.width]="w" [attr.height]="menuHeight(entries) - 10"
+          rx="8" ry="8" [attr.fill]="fill" stroke-width="1"/>
+ 
+    @for (entry of entries; track entry.key; let i = $index) {
+      <text [attr.x]="x + 10" [attr.y]="y + 20 + i * 25"
+            [attr.fill]="textFill" font-size="12"
+            style="cursor:pointer" (click)="openPopup(entry.key, entry.label)">
+        <tspan font-weight="bold">{{ entry.label.split('(')[0].trim() }}:</tspan>
+        <tspan> {{ params[entry.key] }}{{ entry.unit ? ' ' + entry.unit : '' }}</tspan>
+        @if (entry.sub) { <tspan baseline-shift="sub" font-size="9">{{ entry.sub }}</tspan> }
+        @if (entry.extra) { <tspan>{{ entry.extra }}</tspan> }
+        @if (entry.sub2) { <tspan baseline-shift="sub" font-size="9">{{ entry.sub2 }}</tspan> }
+      </text>
+      <!-- Divider (skip after last row) -->
+      @if (i < entries.length - 1) {
+        <line [attr.x1]="x + 8"   [attr.y1]="y + 27 + i * 25"
+              [attr.x2]="x + w - 8" [attr.y2]="y + 27 + i * 25"
+              [attr.stroke]="dividerFill" stroke-width="1"/>
+      }
+    }
+  </ng-template>
+ 
+</svg>
+ 
+<!-- ═══ EDIT POPUP ══════════════════════════════════════════════════════════════ -->
+@if (activePopup) {
+  <div class="popup-overlay" (click)="cancelPopup()">
+    <div class="popup-box" (click)="$event.stopPropagation()">
+      <label>{{ activePopup.label }}</label>
+      <input type="number" [(ngModel)]="tempValue" (keyup.enter)="confirmPopup()"/>
+      <div class="popup-actions">
+        <button class="cancel"  (click)="cancelPopup()">Cancel</button>
+        <button class="confirm" (click)="confirmPopup()">Confirm</button>
+      </div>
+    </div>
+  </div>
+}

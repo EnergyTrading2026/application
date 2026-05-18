@@ -1,0 +1,67 @@
+{
+  "system": {
+    "heatDemand": 200,
+    "electricityPrice": 70.2,
+    "gasPrice": 32.5
+  },
+  "assets": [
+    {
+      "id": 0,
+      "name": "Heat Pump",
+      "type": "heatPump",
+      "icon": "heat_pump",
+      "active": true,
+      "thermalOutput": 45,
+      "thermalOutputUnit": "kW th.",
+      "networkOutput": 45,
+      "input": 15,
+      "inputType": "electricity",
+      "inputUnit": "kW el.",
+      "inputCost": 8.40
+    },
+    {
+      "id": 1,
+      "name": "CHP",
+      "type": "chp",
+      "icon": "water_heater",
+      "active": true,
+      "thermalOutput": 190,
+      "thermalOutputUnit": "kW th.",
+      "networkOutput": 155,
+      "input": 20,
+      "inputType": "gas",
+      "inputUnit": "kW gas.",
+      "inputCost": 8.4,
+      "electricalOutput": 30,
+      "electricalOutputUnit": "kW el.",
+      "electricalOutputRevenue": 5
+    },
+    {
+      "id": 2,
+      "name": "Boiler",
+      "type": "boiler",
+      "icon": "mode_heat",
+      "active": false,
+      "thermalOutput": 0,
+      "thermalOutputUnit": "kW th.",
+      "networkOutput": 0,
+      "input": 0,
+      "inputType": "gas",
+      "inputUnit": "kW gas.",
+      "inputCost": 0
+    }
+  ],
+  "storage": {
+    "title": "Heat Storage",
+    "percent": 68,
+    "capacity": 1250,
+    "charging": 35,
+    "discharge": 0,
+    "metrics": [
+      { "label": "Vorlauftemperatur", "value": "82 °C" },
+      { "label": "Rücklauftemperatur", "value": "48 °C" }
+    ],
+    "netBalance": "+ 35 kW",
+    "range": "~18h"
+  }
+}
