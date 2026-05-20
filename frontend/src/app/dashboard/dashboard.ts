@@ -22,10 +22,10 @@ export class Dashboard {
       link: '/comparisons',
     },
     {
-      title: 'Status',
+      title: 'Monitoring',
       description: 'Monitor real-time status of energy systems — heat pumps, generators, solar panels, and storage.',
       icon: '⚡',
-      link: '/status',
+      link: '/monitoring',
     },
     {
       title: 'Simulation',

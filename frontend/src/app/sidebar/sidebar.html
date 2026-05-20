@@ -1,0 +1,14 @@
+<nav class="sidebar">
+  <a class="sidebar-brand" routerLink="/dashboard">⚡ ETO</a>
+  <div class="sidebar-nav">
+    @for (item of navItems; track item.path) {
+      <a
+        class="nav-item"
+        [routerLink]="item.path"
+        routerLinkActive="active"
+      >
+        {{ item.label }}
+      </a>
+    }
+  </div>
+</nav>

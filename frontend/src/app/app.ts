@@ -1,18 +1,22 @@
 import { Component } from '@angular/core';
-import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterOutlet, Router, ActivatedRoute, NavigationEnd } from '@angular/router';
+import { Sidebar } from './sidebar/sidebar';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [RouterOutlet, Sidebar],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
 export class App {
-  protected readonly navItems = [
-    { label: 'Dashboard', path: '/dashboard' },
-    { label: 'Forecasts', path: '/forecasting' },
-    { label: 'Comparisons', path: '/comparisons' },
-    { label: 'Monitoring', path: '/monitoring' },
-    { label: 'Simulation', path: '/simulation' },
-  ];
+  protected showSidebar = true;
+
+  constructor(private router: Router, private route: ActivatedRoute) {
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        const rootRoute = this.route.snapshot.firstChild;
+        this.showSidebar = rootRoute?.data['showSidebar'] ?? true;
+      }
+    });
+  }
 }
